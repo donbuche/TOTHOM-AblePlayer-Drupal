@@ -69,12 +69,11 @@
 /* ═════════════════════════════════════════════════════════════════════════════
    General
 ═════════════════════════════════════════════════════════════════════════════ */
-/* Restaurem el z-index per evitar que els vídeos quedin per sobre d'altres elements de la pàgina (de 5000 a 0) */
+
 .able {
    z-index: 0;
 }
 
-/* Cantonades arrodonides */
 .able video,
 .able iframe {
    border-top-left-radius: var(--able-border-radius-large);
@@ -98,8 +97,9 @@
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   Media container (correcció per centrar videos amb diferents aspect ratios)
+   Media container (correction per centrar videos amb diferents aspect ratios)
 ═════════════════════════════════════════════════════════════════════════════ */
+
 .able-media-container {
    display: flex;
    align-items: center;
@@ -112,6 +112,7 @@
 /* ═════════════════════════════════════════════════════════════════════════════
    Big Play Button
 ═════════════════════════════════════════════════════════════════════════════ */
+
 .able-big-play-button svg {
    padding: 0 0 0 16px !important;
    width: 6em;
@@ -138,20 +139,16 @@
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   CAPTIONS FIXATS
+   CAPTIONS FIXED
 ═════════════════════════════════════════════════════════════════════════════ */
 
-/* Mida minima */
 div.able-vidcap-container div.able-captions-below {
    min-height: 4.3em;
 }
-
-/* Posició centrada */
 div.able-vidcap-container div.able-captions-below {
    align-content: center;
 }
 
-/* Padding caixa captions */
 div.able-captions-wrapper:not(.able-captions-overlay) {
    padding: 0;
 }
@@ -161,7 +158,7 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   BARRA DE TEMPS 
+   TIME BAR 
 ═════════════════════════════════════════════════════════════════════════════ */
 
 .able-seekbar-wrapper {
@@ -175,7 +172,6 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    cursor: pointer;
 }
 
-/* Augment zona clicable de la barra */
 .able-seekbar::before {
    content: '';
    position: absolute;
@@ -185,7 +181,6 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    right: 0;
 }
 
-/* Bolet */
 .able-seekbar-head {
    min-width: 18px;
    min-height: 18px;
@@ -197,26 +192,23 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    cursor: pointer;
 }
 
-/* Bolet HOVER */
 .able-seekbar-head:hover {
    outline: none !important;
    box-shadow: 0 0 0 2px var(--able-red);
 }
 
-/* Bolet FOCUS */
 .able-seekbar-head:focus-visible {
    outline: revert;
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   Botons
+   Buttons
 ═════════════════════════════════════════════════════════════════════════════ */
-/* Focus visible */
+
 .able-player div[role=button]:focus-visible {
    outline: revert;
 }
 
-/* Botó Play - igualar padding amb els altres botons */
 .able-controller div.able-button-handler-play[role=button] {
    padding: 2px;
 }
@@ -252,7 +244,6 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    TOOLTIPS
 ═════════════════════════════════════════════════════════════════════════════ */
 
-/* Tooltip general */
 .able-tooltip {
    font-size: .8em;
    margin-top: -86px;
@@ -270,23 +261,20 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    }
 }
 
-/* Tooltip de la barra del temps - pujar-lo més amunt */
 .able-seekbar-wrapper .able-tooltip {
    bottom: 22px !important;
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   CONTROLS DE REPRODUCCIÓ 
+   PLAYBACK CONTROLS 
 ═════════════════════════════════════════════════════════════════════════════ */
 
-/* HOVER - Treure l'outline + Punters visibles */
 .able-controller div[role=button]:hover {
    outline: none;
    cursor: pointer;
    color: var(--able-red);
 }
 
-/* HOVER - Color icones */
 .able-wrapper div[role=button] svg:hover,
 .able-controller div[role=button]:hover svg {
    fill: var(--able-red) !important;
@@ -338,7 +326,6 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    box-shadow: none !important;
 }
 
-/* Thumb (puntet) - NORMAL */
 .able-volume-slider input[type=range]::-webkit-slider-thumb {
    -webkit-appearance: none;
    appearance: none;
@@ -352,7 +339,6 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    outline: none !important;
 }
 
-/* Thumb (puntet) - HOVER */
 .able-volume-slider input[type=range]::-webkit-slider-thumb:hover {
    background: var(--able-white);
    box-shadow: 0 0 0 2px var(--able-white) !important;
@@ -361,7 +347,6 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    outline: none !important;
 }
 
-/* FIREFOX */
 .able-volume-slider input[type=range]::-moz-range-track {
    background: transparent;
    width: 60px !important;
@@ -403,14 +388,13 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    }
 }
 
-/* Restaurar l'outline del navegador quan es fa focus a un input*/
 .able-controller input:focus {
    outline: revert;
    outline-offset: 4px;
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   BARRA D'INFORMACIÓ INFERIOR - STATUS BAR
+   BOTTOM INFORMATION BAR - STATUS BAR
 ═════════════════════════════════════════════════════════════════════════════ */
 
 .able-status-bar {
@@ -428,7 +412,6 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    cursor: default;
 }
 
-/* Evitar el moviment del timer,speed o status de la barra d'estat en canviar el seu contingut */
 .able-status-bar span.able-timer {
    width: 32%;
 }
@@ -441,29 +424,20 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    width: 32%;
 }
 
-
 /* ═════════════════════════════════════════════════════════════════════════════
-   TRANSCRIPCIONS
+   TRANSCRIPTS
 ═════════════════════════════════════════════════════════════════════════════ */
 
-/* Barra d'idioma transcripcions*/
 .able-window-toolbar {
    padding: 0.8em;
    flex-wrap: wrap;
 }
-
-/* Popup menú preferències Modal - Posició */
 .able-window-toolbar .able-popup {
    top: 50px !important;
    left: 48px;
    background: var(--able-menu-background);
 }
-
-
-/* Optimització de Transcripcions i Video de llenguatge de signes en pantalles menors a 480px */
 @media (width < 480px) {
-
-   /* Només afecta als diàlegs arrossegables, no als transcripcions fixes */
    .able-sign-window:not([style*="display: none"]),
    .able-transcript-area[role="dialog"]:not([style*="display: none"]) {
       position: static !important;
@@ -476,41 +450,34 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
       bottom: auto !important;
    }
 
-   /* Desactivar cursor d'arrossegament */
    .able-drag {
       cursor: default !important;
       pointer-events: none;
    }
 
-   /* Desactivar cursor d'arrossegament en hover */
    .able-draggable:hover {
       cursor: default !important;
    }
-
-   /* Ocultar botó de redimensionar */
+   
    .able-resizable {
       display: none !important;
    }
-
-   /* Ocultar botó de preferències (menú) */
+   
    .able-window-toolbar .able-button-handler-preferences {
       display: none !important;
-   }
-
-   /* Assegurar que el contingut de la transcripció s'adapti */
+   }  
+   
    .able-transcript {
       width: 100% !important;
       padding-bottom: 1rem;
    }
-
-   /* Vídeo de signes també ha d'ocupar l'amplada completa */
+   
    .able-sign-window video {
       width: 100% !important;
       max-width: 100% !important;
    }
 }
 
-/* Contenidor intern */
 .able-transcript-area {
    height: auto;
    width: auto;
@@ -518,7 +485,6 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    border-width: 1.8px;
 }
 
-/* Correcció del Highlight padding per evita que les lletres descendents quedin tallades en fer zoom */
 .able-highlight {
    padding: .02em .1em;
 }
@@ -527,7 +493,6 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    PREFERÈNCES D'USUARI
 ═════════════════════════════════════════════════════════════════════════════ */
 
-/* Popup menú preferències*/
 .able-popup {
    transform: translateY(-2.5em);
    border-radius: var(--able-border-radius-large) !important;
@@ -586,7 +551,6 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    color: inherit !important;
 }
 
-/* Capçaleres dels grups d'idiomes */
 .able-popup .able-popup-heading {
    display: block;
    padding: 0.25em 0.8em;
@@ -597,7 +561,6 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
    border-radius: var(--able-border-radius-large);
 }
 
-/* No desplaçar el text quan hi ha el check de selecció */
 .able-popup .able-lang-list li[role="menuitemradio"] {
    position: relative;
    padding-left: 1.4em !important;
@@ -624,7 +587,7 @@ ul.able-popup li:last-of-type {
 /* ═════════════════════════════════════════════════════════════════════════════
    MODAL DIALOGS
 ═════════════════════════════════════════════════════════════════════════════ */
-/* General */
+
 div.able-modal-dialog {
    border: none;
    border-radius: var(--able-border-radius-large);
@@ -632,7 +595,6 @@ div.able-modal-dialog {
    max-width: 96%;
 }
 
-/* Header de 3 columnes  */
 .able-modal-header {
    display: grid;
    grid-template-columns: 1fr auto 1fr;
@@ -640,19 +602,15 @@ div.able-modal-dialog {
    gap: .5rem;
 }
 
-/* H1 al centre */
 .able-modal-header>h1 {
    grid-column: 2;
    justify-self: center;
 }
-
-/* Botó de tancar a la dreta */
 .able-modal-header>.modalCloseButton {
    grid-column: 3;
    justify-self: end;
 }
 
-/* Modal dialog - H1 */
 div.able-modal-dialog h1 {
    margin: 1em 0;
    font-size: 2em !important;
@@ -663,7 +621,6 @@ div.able-modal-dialog h1 {
    word-break: break-word;
 }
 
-/* Modal dialog - H2 */
 .able-modal-dialog h2 {
    text-align: left !important;
 }
@@ -675,14 +632,12 @@ div.able-modal-dialog h1 {
    color: var(--able-white) !important;
 }
 
-/* Modal dialog - H3 */
 .able-modal-dialog h3 {
    font-size: 1.2em !important;
    line-height: 1.3em !important;
    color: var(--able-white) !important;
 }
 
-/* Modal dialog - p */
 div.able-modal-dialog p {
    font-size: 1em !important;
    line-height: 1.5em !important;
@@ -699,12 +654,9 @@ div.able-modal-dialog ul {
    text-align: start;
 }
 
-/* Modal dialog - ul */
 .able-prefs-form ul {
    margin-bottom: 2em;
 }
-
-/* Audiodescripció*/
 .able-prefs-descriptions .able-prefs-captions>div,
 .able-prefs-descriptions>div {
    gap: 0.5em;
@@ -731,7 +683,6 @@ div.able-modal-dialog ul {
    flex-shrink: 0;
 }
 
-/* Modal dialog - Preferències dels subtítols */
 .able-prefs-captions {
    display: grid;
    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -764,7 +715,6 @@ div.able-prefDescPause {
    margin-top: 2em;
 }
 
-/* Estil per les opcions del select */
 .able-prefs-captions select option,
 .able-prefs-descriptions select option {
    cursor: pointer;
@@ -800,20 +750,17 @@ div.able-prefDescPause {
    margin-bottom: 2em;
 }
 
-/* Previsualització subtítols */
 .able-captions-sample {
    margin: 2em 1em;
    padding: 0.5em;
    box-shadow: 0 0 3em rgba(255, 255, 255, 0.3);
 }
 
-/* Text de mostra Audiodescripció */
 .able-desc-sample {
    margin: 2em 1em;
    box-shadow: 0 0 3em rgba(255, 255, 255, 0.3);
 }
 
-/* Dreceres de teclat */
 span.able-modkey,
 span.able-modkey-alt,
 span.able-modkey-ctrl,
@@ -831,7 +778,6 @@ span.able-modkey-shift {
    margin-bottom: 0.2em;
 }
 
-/* Checkboxs i posició dels textos circumdants */
 input[type="checkbox"] {
    width: 24px;
    height: 24px;
@@ -883,13 +829,11 @@ input[type="checkbox"] {
    outline-offset: 1px;
 }
 
-/* Enllaços dins els modals */
 .able-modal-dialog a {
    color: white;
    text-underline-offset: 3px;
 }
 
-/* Llistes a l'About */
 .able-about-more-info-list {
    margin: 0 0 1rem 1rem;
    padding: 0;
@@ -897,18 +841,16 @@ input[type="checkbox"] {
 
 .able-about-more-info-list li {
    margin-bottom: 0.5rem;
-
 }
 
-/* Modal redimensionar la transcripció o video de signes */
 .able-resize-form label {
    margin-bottom: 0.5em;
 }
 
-
 /* ═════════════════════════════════════════════════════════════════════════════
    MODAL DIALOGS - BUTTONS
 ═════════════════════════════════════════════════════════════════════════════ */
+
 .able-prefs-buttons {
    gap: 24px;
    margin-top: 2rem;
@@ -930,7 +872,6 @@ button.modal-button:hover {
    color: var(--able-black) !important;
 }
 
-/* Botó de tancament modal */
 .able-modal-dialog .modalCloseButton {
    cursor: pointer;
    border: none;
@@ -980,32 +921,27 @@ div.able-modal-dialog input:focus,
    outline-offset: 3px;
 }
 
-/* BOTÓ PREFERENCIES - TRANSCRIPCIÓ I LLENGUATGE DE SIGNES - PADDING */
 .able-window-toolbar .able-button-handler-preferences {
    padding: 2px;
 }
 
-/* BOTÓ PREFERENCIES - TRANSCRIPCIÓ I LLENGUATGE DE SIGNES - SVG SIZE */
 .able-window-toolbar .able-button-handler-preferences svg {
    min-width: 20px;
    min-height: 20px;
 }
 
-/* BOTÓ PREFERENCIES - TRANSCRIPCIÓ I LLENGUATGE DE SIGNES - FOCUS */
 .able-window-toolbar .able-button-handler-preferences:focus {
    outline: revert !important;
    outline-offset: 3px !important;
    line-height: 0;
 }
 
-/* BOTÓ PREFERENCIES - TRANSCRIPCIÓ I LLENGUATGE DE SIGNES - HOVER */
 .able-window-toolbar .able-button-handler-preferences:hover {
    outline: revert !important;
    cursor: pointer;
    color: var(--able-red);
 }
 
-/* Border transcripció en mode Drag */
 .able-drag {
    border: none;
    outline: 1px auto Highlight;
@@ -1013,7 +949,6 @@ div.able-modal-dialog input:focus,
    outline-offset: 2px;
 }
 
-/* Botó de redimensionar el transcript */
 .able-resizable {
    bottom: 2px;
    right: 15px;
@@ -1021,30 +956,26 @@ div.able-modal-dialog input:focus,
    height: 24px;
 }
 
-/* Botó de redimensionar el trasnscript - HOVER */
 .able-resizable:hover svg line {
    stroke: var(--able-red) !important;
 }
 
-/* Botó de redimensionar el Vídeo de Signes POSICIÓ - NORMAL */
 .able-sign-window>.able-resizable {
    right: 2px;
 }
 
-/* Botó de redimensionar el Vídeo de Signes COLOR - NORMAL */
 .able-sign-window .able-resizable svg line {
    stroke: var(--able-white) !important;
 }
 
-/* Botó de redimensionar el Vídeo de Signes COLOR - HOVER */
 .able-sign-window .able-resizable:hover svg line {
    stroke: var(--able-red) !important;
 }
 
-
 /* ═════════════════════════════════════════════════════════════════════════════
    MODALS DE TRANSCRIPCIÓ I LLENGUATGE DE SIGNES
 ═════════════════════════════════════════════════════════════════════════════ */
+
 .able-transcript-area,
 .able-sign-window {
    z-index: 2 !important;

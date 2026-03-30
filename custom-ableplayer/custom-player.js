@@ -2,27 +2,25 @@
  ======================== CUSTOM SCRIPT FOR ABLE PLAYER ========================
  ============================================================================ */
 
-/* Scripts que reescriuen les funcions del codi original ableplayer.js */
-
 /* ═══════════════════════════════════════════════════════════════════════════
-   SLIDER VOLUM - COLOR DINÀMIC / ÀREA CANCEL·LACIÓ DEL CURSOR
+   VOLUME SLIDER - DYNAMIC COLOR / CURSOR CANCELLATION AREA
 ══════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
   'use strict';
 
-  // Variables globals
+  // Global variables
   var volumeSliderInitialized = false;
   var currentVolSlider = null;
   var currentVolStartVal = null;
-  var debugVolumeOverlay = false; // posar a true per activar el marcatge visual
+  var debugVolumeOverlay = false; // set true to enable visual marker
   var $volOverlay = null;
-
-  // Configuració de toleràncies per cancel·lació
-  var tolX = 12;   // píxels horitzontals
-  var tolY = 15;   // píxels verticals
-
-  // Funció principal que actualitza el fons del slider
+  
+  
+  var tolX = 12;   // horizontal pixels
+  var tolY = 15;   // vertical pixels
+  
+  
   function updateVolumeSliderBackground($range) {
     if (!$range || $range.length === 0) return;
 
@@ -30,24 +28,22 @@
     var min = parseFloat($range.attr('min')) || 0;
     var max = parseFloat($range.attr('max')) || 100;
 
-    // Assegurar valors vàlids
     val = Math.max(min, Math.min(max, val));
 
-    // Calcular percentatge
+    // Calculate percentage
     var percent = min === max ? 0 : ((val - min) / (max - min)) * 100;
 
-    // Detectar navegador per la direcció del gradient
     var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
     var direction = isFirefox ? 'to top' : 'to right';
 
-    // Crear gradient: blanc fins al percentatge, gris des del percentatge
+    // Create gradient: white to percentage, gray from percentage
     var gradient = 'linear-gradient(' + direction + ', ' +
       'rgb(255, 255, 255) 0%, ' +
       'rgb(255, 255, 255) ' + percent + '%, ' +
       'rgb(138, 138, 138) ' + percent + '%, ' +
       'rgb(138, 138, 138) 100%)';
 
-    // Aplicar el gradient
+    // Apply gradient
     $range.css('background', gradient);
 
     // Debug info
@@ -62,24 +58,22 @@
     }
   }
 
-  // Inicialitzar tots els sliders de volum
+  // Initialize all volume sliders
   function initializeVolumeSliders() {
     $('.able-volume-slider input[type=range]').each(function () {
       var $slider = $(this);
 
-      // Assegurar-nos que el slider té valors per defecte
       if (!$slider.attr('min')) $slider.attr('min', '0');
       if (!$slider.attr('max')) $slider.attr('max', '100');
-      if (!$slider.val()) $slider.val('100'); // Volum per defecte al 100%
+      if (!$slider.val()) $slider.val('100'); // Default volume at 100%
 
-      // Aplicar el fons inicial
+      // Apply initial background
       updateVolumeSliderBackground($slider);
     });
 
     volumeSliderInitialized = true;
   }
 
-  // Funció per detectar quan es crea un nou slider
   function detectNewVolumeSliders() {
     var observer = new MutationObserver(function (mutations) {
       var shouldUpdate = false;
@@ -112,12 +106,11 @@
     });
   }
 
-  // Event handlers per drag i cancel·lació
   function setupVolumeSliderEvents() {
-    // Eliminar events anteriors
+    // Remove previous events
     $(document).off('mousedown.ableVolDrag mouseup.ableVolDrag');
 
-    // Mouse down - iniciar drag
+    // Mouse down - start drag
     $(document).on('mousedown.ableVolDrag', '.able-volume-slider input[type=range]', function (e) {
       currentVolSlider = this;
       currentVolStartVal = $(this).val();
@@ -127,7 +120,7 @@
       }
     });
 
-    // Mouse up - finalitzar drag
+    // Mouse up - end drag
     $(document).on('mouseup.ableVolDrag', function (e) {
       if (!currentVolSlider) return;
 
@@ -140,11 +133,11 @@
       );
 
       if (!inside) {
-        // Cancel·lar canvi i restaurar valor inicial
+        // Cancel change and restore initial value
         $(currentVolSlider).val(currentVolStartVal).trigger('input').trigger('change');
       }
 
-      // Netejar overlay de debug
+      // Clear debug overlay
       if ($volOverlay) {
         $volOverlay.remove();
         $volOverlay = null;
@@ -156,7 +149,7 @@
     });
   }
 
-  // Mostrar overlay de debug
+  // Show debug overlay
   function showDebugOverlay(slider) {
     if (!debugVolumeOverlay) return;
 
@@ -176,30 +169,28 @@
     $('body').append($volOverlay);
   }
 
-  // Inicialització principal
   $(document).ready(function () {
-    // Inicialitzar sliders existents
+    // Initialize existing sliders
     initializeVolumeSliders();
 
-    // Configurar events
+    // Configure events
     setupVolumeSliderEvents();
 
-    // Detectar nous sliders
+    // Detect new sliders
     detectNewVolumeSliders();
 
-    // Event per canvis de valor
+    // Event for value changes
     $(document).on('input change', '.able-volume-slider input[type=range]', function () {
       updateVolumeSliderBackground($(this));
     });
 
-    // Event per clic al botó de volum
     $(document).on('click', '.able-volume-button', function () {
       setTimeout(function () {
         initializeVolumeSliders();
       }, 150);
     });
 
-    // Event personalitzat per AblePlayer
+    // Custom AblePlayer event
     $(document).on('ableplayer-volume-slider-created', function () {
       setTimeout(function () {
         initializeVolumeSliders();
@@ -208,8 +199,6 @@
   });
 
 })(jQuery);
-
-
 
 /* ═══════════════════════════════════════════════════════════════════════════
    MODIFICAR MIDA ICONA PLAY (SVG) - viewBox
@@ -220,15 +209,15 @@
     if (!window.AblePlayer || !AblePlayer.prototype || !AblePlayer.prototype.getIconData) {
       return false;
     }
-    // Desa la funció original
+
     var origGetIconData = AblePlayer.prototype.getIconData;
 
-    // Substitueix-la amb un wrapper
+    // Replace with a wrapper
     AblePlayer.prototype.getIconData = function (button) {
       var svg = origGetIconData.call(this, button);
-      // Toca només el botó 'play'
+
       if (button === 'play' && Array.isArray(svg)) {
-        // Clona per seguretat i ajusta el viewBox
+
         svg = svg.slice(0);
         svg[0] = '0 0 20 20';
       }
@@ -237,15 +226,13 @@
     return true;
   }
 
-  // Intenta aplicar el patch immediatament
+  // Try applying patch immediately
   if (applyPatch()) return;
 
-  // Si AblePlayer encara no està disponible, torna-ho a provar quan la pàgina acabi de carregar
   var onReady = function () { applyPatch(); };
   if (document.readyState === 'complete') onReady();
   else window.addEventListener('load', onReady);
 })();
-
 
 /* ═══════════════════════════════════════════════════════════════════════════
     BOTÓ DE TANCAMENT DEL DIÀLEG ACCESSIBLE --> DE TEXT A SVG
@@ -260,7 +247,6 @@
     var $btn = this.modal && this.modal.find('.modalCloseButton').first();
     if (!$btn || !$btn.length) return;
 
-    // Evita inserir la icona més d'una vegada
     if ($btn.find('svg, img').length) return;
 
     var label = $btn.attr('aria-label') || $btn.text() || 'Tanca';
@@ -282,17 +268,16 @@
 
       var path = document.createElementNS(svgNS, 'path');
       path.setAttribute('d', svgData[1]);
-      // Important: que agafi el color del text del botó
+
       path.setAttribute('fill', 'currentColor');
 
       svg.appendChild(path);
       $btn.append(svg);
-    } else {
-      // Fallback molt bàsic si no hi ha AblePlayer
+    } 
+    else {
       $btn.text('×');
     }
 
-    // Afegeix text per a lectors de pantalla si cal
     if (!$btn.attr('aria-label')) {
       var $sr = $('<span>', { 'class': 'able-clipped', text: label });
       $btn.append($sr);
@@ -303,7 +288,6 @@
   NewAccessibleDialog.prototype.constructor = NewAccessibleDialog;
   window.AccessibleDialog = NewAccessibleDialog;
 
-  // Injecció CSS mínima per assegurar mida/alineació correctes
   if (!document.getElementById('able-close-css')) {
     var style = document.createElement('style');
     style.id = 'able-close-css';
@@ -314,20 +298,18 @@
   }
 })(jQuery);
 
-
 /* ═══════════════════════════════════════════════════════════════════════════
    BOTÓ DE TANCAMENT DELS ABLE-ALERT --> DE TEXT A SVG
 ══════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
-  // Funció per substituir el text "×" per icona SVG en els alerts
+
   function replaceAlertCloseButton($alert) {
     if (!$alert || !$alert.length) return;
 
     var $btn = $alert.find('button[aria-label="Dismiss"], button:contains("×")').first();
     if (!$btn || !$btn.length) return;
 
-    // Evita inserir la icona més d'una vegada
     if ($btn.find('svg, img').length) return;
 
     var label = $btn.attr('aria-label') || 'Dismiss';
@@ -349,31 +331,29 @@
 
       var path = document.createElementNS(svgNS, 'path');
       path.setAttribute('d', svgData[1]);
-      // Important: que agafi el color del text del botó
+
       path.setAttribute('fill', 'currentColor');
 
       svg.appendChild(path);
       $btn.append(svg);
-    } else {
-      // Fallback si no hi ha AblePlayer
+    } 
+    else {
+      // Fallback if AblePlayer is not available
       $btn.text('×');
     }
 
-    // Afegeix text per a lectors de pantalla si cal
     if (!$btn.attr('aria-label')) {
       var $sr = $('<span>', { 'class': 'able-clipped', text: label });
       $btn.append($sr);
     }
   }
 
-  // Funció per processar tots els alerts existents
   function processExistingAlerts() {
     $('.able-alert').each(function () {
       replaceAlertCloseButton($(this));
     });
   }
 
-  // Observer per detectar nous alerts que es creïn dinàmicament
   function setupAlertObserver() {
     var observer = new MutationObserver(function (mutations) {
       var shouldProcess = false;
@@ -405,7 +385,6 @@
     });
   }
 
-  // Inicialització
   $(document).ready(function () {
     // Processar alerts existents
     processExistingAlerts();
@@ -414,7 +393,6 @@
     setupAlertObserver();
   });
 
-  // Injecció CSS per assegurar mida/alineació correctes dels alerts
   if (!document.getElementById('able-alert-close-css')) {
     var style = document.createElement('style');
     style.id = 'able-alert-close-css';
@@ -446,16 +424,17 @@
       $parentWindow = thisObj.$ableDiv;
       if (location === 'transcript') {
         $parentWindow = thisObj.$transcriptArea;
-      } else if (location === 'sign') {
+      } 
+      else if (location === 'sign') {
         $parentWindow = thisObj.$signWindow;
-      } else if (location === 'screenreader') {
+      } 
+      else if (location === 'screenreader') {
         $alertBox = thisObj.$srAlertBox;
       }
       $alertBox.find('span').text(msg);
       $alertBox.appendTo($parentWindow)
       $alertBox.css({ 'display': 'flex' });
 
-      // MODIFICACIÓ: Canviar de 30000ms (30s) a 5000ms (5s)
       if (location !== 'screenreader') {
         setTimeout(function () {
           $alertBox.fadeOut(300);
@@ -463,7 +442,7 @@
       }
 
       // FIX: Solucionar problema del role="alert" quan l'element es mou al DOM
-      // Els lectors de pantalla no sempre anuncien elements que es mouen, només els nous
+
       $alertBox.removeAttr('role');
       setTimeout(function () {
         $alertBox.attr('role', 'alert');
@@ -489,15 +468,15 @@
 /* ══════════════════════════════════════════════════════════════════════════════════════════════
    TRADUCCIÓ DE TEXTOS ACCESSIBLESLIDER (HORES, MINUTS, SEGONS)
 ═════════════════════════════════════════════════════════════════════════════════════════════════ */
+
 (function ($) {
-  // Guarda una referència al constructor original
+
   var OldAccessibleSlider = window.AccessibleSlider;
 
-  // Defineix el nou constructor que accepta un paràmetre extra 'tt'
   function CustomAccessibleSlider(mediaType, div, orientation, length, min, max, bigInterval, label, className, trackingMedia, initialState, tt) {
     // Crida al constructor original
     OldAccessibleSlider.call(this, mediaType, div, orientation, length, min, max, bigInterval, label, className, trackingMedia, initialState);
-    // Afegeix la taula de traduccions
+
     this.tt = tt;
   }
 
@@ -505,28 +484,26 @@
   CustomAccessibleSlider.prototype = Object.create(OldAccessibleSlider.prototype);
   CustomAccessibleSlider.prototype.constructor = CustomAccessibleSlider;
 
-  // Reemplaça el constructor original per aquest nou
   window.AccessibleSlider = CustomAccessibleSlider;
 
-  // ========= Sobrescriptura d’addControls =========
-  // Guarda la funció original
+  // Sobrescriptura d’addControls
+
   var oldAddControls = AblePlayer.prototype.addControls;
   AblePlayer.prototype.addControls = function () {
-    // Crida la funció original
+
     oldAddControls.apply(this, arguments);
 
-    // Si el skin és '2020' i s'ha creat la seekBar, assigna-li la taula de traduccions
     if (this.skin === '2020' && this.seekBar) {
       this.seekBar.tt = this.tt;
     }
   };
 
-  // ========= Sobrescriptura d’updateAriaValues =========
-  // Aquest mètode és utilitzat per construir el text accessible (p. ex. "1 hour, 3 minutes, 5 seconds")
-  // Ara s’utilitza la taula de traduccions 'tt' (si no s'ha definit, s'utilitzen valors per defecte)
+  // Sobrescriptura d’updateAriaValues
+
+  // The 'tt' translation table is now used (if undefined, default values are used)
   var oldUpdateAriaValues = AccessibleSlider.prototype.updateAriaValues;
   AccessibleSlider.prototype.updateAriaValues = function (position, updateLive) {
-    // Utilitza this.tt si existeix, o crea un objecte per defecte
+    // Use this.tt if it exists, or create a default object
     var tt = this.tt || {
       hour: 'hour',
       hours: 'hours',
@@ -547,13 +524,14 @@
     var descriptionText;
     if (pHours > 0) {
       descriptionText = pHours + ' ' + pHourWord + ', ' + pMinutes + ' ' + pMinuteWord + ', ' + pSeconds + ' ' + pSecondWord;
-    } else if (pMinutes > 0) {
+    } 
+    else if (pMinutes > 0) {
       descriptionText = pMinutes + ' ' + pMinuteWord + ', ' + pSeconds + ' ' + pSecondWord;
-    } else {
+    } 
+    else {
       descriptionText = pSeconds + ' ' + pSecondWord;
     }
 
-    // Actualitza la regió live (per a usuaris de lectors de pantalla)
     if (!this.liveAriaRegion) {
       this.liveAriaRegion = $('<span>', {
         'class': 'able-offscreen',
@@ -565,7 +543,7 @@
       this.liveAriaRegion.text(descriptionText);
     }
 
-    // Actualitza els atributs ARIA del seekHead
+    // Update seekHead ARIA attributes
     this.seekHead.attr('aria-valuetext', descriptionText);
     this.seekHead.attr('aria-valuenow', Math.floor(position).toString());
   };
@@ -594,7 +572,6 @@
       // So, nothing to do here... 
     }
     else {
-
       if (this.captions.length === 0) { // this is the first	
         this.captions.push({
           'language': track.language,
@@ -608,6 +585,7 @@
         inserted = false;
         for (i = 0; i < this.captions.length; i++) {
           capLabel = track.label;
+          
           if (capLabel.toLowerCase() < this.captions[i].label.toLowerCase()) {
             // insert before track i
             this.captions.splice(i, 0, {
@@ -639,13 +617,16 @@
     this.currentCaption = -1;
     if (this.prefCaptions === 1) {
       this.captionsOn = true;
-    } else if (this.prefCaptions === 0) {
+    } 
+    else if (this.prefCaptions === 0) {
       this.captionsOn = false;
-    } else {
+    } 
+    else {
       // user has no prefs. Use default state.
       if (this.defaultStateCaptions === 1) {
         this.captionsOn = true;
-      } else {
+      } 
+      else {
         this.captionsOn = false;
       }
     }
@@ -659,19 +640,20 @@
       // Either way, it needs to be rebuilt...  
       this.$captionsDiv = $('<div>', {
         'class': 'able-captions',
-        'tabindex': 0,          // ◀◀◀◀◀◀
-        'lang': track.language  // ◀◀◀◀◀◀
+        'tabindex': 0,
+        'lang': track.language
       });
       this.$captionsWrapper = $('<div>', {
         'class': 'able-captions-wrapper',
-        'aria-hidden': 'false',  // ◀◀◀◀◀◀
-        'aria-live': 'polite',   // ◀◀◀◀◀◀
-        'aria-atomic': 'true',   // ◀◀◀◀◀◀
-        'lang': track.language   // ◀◀◀◀◀◀
+        'aria-hidden': 'false',
+        'aria-live': 'polite',
+        'aria-atomic': 'true',
+        'lang': track.language
       }).hide();
       if (this.prefCaptionsPosition === 'below') {
         this.$captionsWrapper.addClass('able-captions-below');
-      } else {
+      } 
+      else {
         this.$captionsWrapper.addClass('able-captions-overlay');
       }
       this.$captionsWrapper.append(this.$captionsDiv);
@@ -684,6 +666,7 @@
 /* ═══════════════════════════════════════════════════════════════════════════════════════════════════════════
    ACTUALITZA L'ATRIBUT LANG SEGONS L'IDIOMA SELECCIONAT A TOT EL CONTENIDOR DEL CAPTIONS I AL DIV DEL CAPTIONS
 ══════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
+
 (function ($) {
   AblePlayer.prototype.showCaptions = function (now) {
 
@@ -710,11 +693,10 @@
         captionText = this.flattenCueForCaption(cues[thisCaption]).replace('\n', '<br>');
         this.$captionsDiv.html(captionText);
 
-        // Actualitza l'atribut lang segons l'idioma seleccionat al div del captions ◀◀◀◀◀◀
         if (this.selectedCaptions && this.selectedCaptions.language) {
           this.$captionsDiv.attr('lang', this.selectedCaptions.language);
         }
-        // Actualitza l'atribut lang segons l'idioma seleccionat a tot el contenidor del captions ◀◀◀◀◀◀
+
         if (this.selectedCaptions && this.selectedCaptions.language) {
           this.$captionsWrapper.attr('lang', this.selectedCaptions.language);
         }
@@ -737,10 +719,10 @@
 
 })(jQuery);
 
-
 /* ═══════════════════════════════════════════════════════════════════════════════════════════════════════════
    Afegir l'idioma ARANÈS (oc-aranes) a la llista d'idiomes suportats
 ══════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
+
 (function ($) {
 
   AblePlayer.prototype.getSupportedLangs = function () {
@@ -754,19 +736,19 @@
 
 (function ($) {
 
-  // Placeholder perquè la resta de la lògica d'idiomes pugui reconèixer el codi oc-aranes si es carrega un fitxer de traduccions extern
   var isoLangs = {
     "oc-aranes": {
       "name": "Aranese",
       "nativeName": "Aranés"
     },
   }
-
+  
 })(jQuery);
 
 /* ══════════════════════════════════════════════════════════════════════
   Redimensionar àrea de transcripció i marge inferior intern
 ═══════════════════════════════════════════════════════════════════════ */
+
 (function () {
   var origResizeObject = AblePlayer.prototype.resizeObject;
 
@@ -802,6 +784,7 @@
 /* ══════════════════════════════════════════════════════════════════════
    Evitar que el botó de redimensionar la transcripció quedi "enganxat"
 ═══════════════════════════════════════════════════════════════════════ */
+
 (function () {
   var origStartResize = AblePlayer.prototype.startResize;
 
@@ -820,7 +803,6 @@
   };
 })();
 
-
 /* ══════════════════════════════════════════════════════════════════════
     Treure opcions del menú de preferències si no hi ha els tracks corresponents
  ═══════════════════════════════════════════════════════════════════════ */
@@ -832,16 +814,14 @@
   AblePlayer.prototype.createPopup = function (which, tracks) {
     var thisObj = this;
 
-    // Si no és menú de preferències, utilitzar implementació original
     if (which !== 'prefs') {
       return originalCreatePopup.call(this, which, tracks);
     }
 
-    // Cachear resultats per evitar crides repetides
+    // Cache results to avoid repeated calls
     var hasTextTracks = this.mediaElement && this.mediaElement.textTracks && this.mediaElement.textTracks.length > 0;
     var hasMediaElement = this.$media && this.$media.length > 0;
 
-    // Funció helper per verificar tracks per tipus
     var hasTracksByKind = function (kind) {
       if (!hasTextTracks) return false;
       for (var t = 0; t < this.mediaElement.textTracks.length; t++) {
@@ -850,12 +830,10 @@
       return false;
     }.bind(this);
 
-    // Funció helper per verificar tracks HTML
     var hasHtmlTracks = function (selector) {
       return hasMediaElement && this.$media.find(selector).length > 0;
     }.bind(this);
 
-    // Funció helper per verificar YouTube/Vimeo
     var hasYouTubeCaptions = function () {
       return this.player === 'youtube' && (
         (this.youtubeCaptions && this.youtubeCaptions.length > 0) ||
@@ -869,7 +847,6 @@
       return this.player === 'vimeo' && this.vimeoCaptions && this.vimeoCaptions.length > 0;
     }.bind(this);
 
-    // Mapeig de tipus de preferències amb les seves condicions
     var prefConditions = {
       'descriptions': function () {
         return hasTracksByKind('descriptions') ||
@@ -919,24 +896,20 @@
       }
     };
 
-    // Filtrar preferències disponibles
     var filteredPrefCats = this.prefCats.filter(function (prefCat) {
       return prefConditions[prefCat] && prefConditions[prefCat].call(this);
     }.bind(this));
 
-    // Si no hi ha preferències, retornar
     if (filteredPrefCats.length === 0) {
       return $('<ul>').hide();
     }
 
-    // Crear menú
     var $menu = $('<ul>', {
       'id': this.mediaId + '-' + which + '-menu',
       'class': 'able-popup',
       'role': 'menu'
     }).hide();
 
-    // Crear ítems del menú
     filteredPrefCats.forEach(function (prefCat) {
       var config = prefConfig[prefCat];
       var $menuItem = $('<li>', {
@@ -963,15 +936,14 @@
 
 })(jQuery);
 
-
 /* ══════════════════════════════════════════════════════════════════════
    Nova opció "About" al menú de preferències
 ═══════════════════════════════════════════════════════════════════════ */
+
 (function ($) {
   'use strict';
   if (typeof AblePlayer === 'undefined') return;
 
-  // CONFIGURACIÓ DEL PRODUCTE  
   const buildType = 'web'; // Opcions: 'web', 'wp'
   const productVersions = {
     web: { nameKey: 'productNameWeb', descKey: 'webEditionDescription' },
@@ -997,7 +969,6 @@
       'class': 'able-about able-modal-dialog'
     });
 
-    // SECCIÓ 1
     $content.append(
       $('<h2>').text(`${productName} ${PRODUCT_VERSION}`),
       $('<p>', { 'class': 'able-about-copyright' }).text(
@@ -1007,7 +978,6 @@
       $('<hr>')
     );
 
-    // SECCIÓ 2
     $content.append(
       $('<h2>').text(t(this, 'thirdPartyComponents')),
       $('<p>').text(t(this, 'thirdPartyDescription')),
@@ -1019,23 +989,21 @@
       $('<hr>')
     );
 
-    // SECCIÓ 3
     $content.append(
       $('<h2>').text(t(this, 'moreInfoTitle')),
-      // Creem una llista <ul>
+
       $('<ul>', { 'class': 'able-about-more-info-list' }).append(
-        // Primer element de la llista <li>
+
         $('<li>').html(
           `${t(this, 'originalProject')}: <a href="https://ableplayer.github.io/ableplayer/" target="_blank" rel="noopener noreferrer">ableplayer.github.io</a>`
         ),
-        // Segon element de la llista <li>
+
         $('<li>').html(
           `${t(this, 'developedBy')}: <a href="https://www.tothomweb.com" target="_blank" rel="noopener noreferrer">TOTHOMweb.com</a>`
         )
       )
     );
 
-    // Lògica per crear el diàleg
     $('body').append($content);
     if (typeof AccessibleDialog !== 'function') {
       $content.attr({ role: 'dialog', 'aria-label': dialogTitle, tabindex: -1 }).hide();
@@ -1043,7 +1011,8 @@
         show: () => $content.show().focus(),
         hide: () => $content.hide()
       };
-    } else {
+    } 
+    else {
       this.aboutDialog = new AccessibleDialog($content, this.$prefsButton, 'dialog', true, dialogTitle, $('<p class="able-offscreen">'), closeText);
     }
   };
@@ -1054,7 +1023,6 @@
     this.aboutDialog.show();
   };
 
-  // Afegeix el botó al menú
   const _origCreatePopup = AblePlayer.prototype.createPopup;
   AblePlayer.prototype.createPopup = function (which, tracks) {
     const $menu = _origCreatePopup.apply(this, arguments);
@@ -1077,12 +1045,14 @@
 /* ══════════════════════════════════════════════════════════════════════
    Augmentar l'ample inicial de les finestres arrossegables (transcripció i signes)
 ═══════════════════════════════════════════════════════════════════════ */
+
 (function () {
   AblePlayer.prototype.getDefaultWidth = function (which) {
     let viewportMaxwidth = window.innerWidth;
     if (which === 'transcript') {
       return (viewportMaxwidth <= 500) ? viewportMaxwidth : 500;
-    } else if (which === 'sign') {
+    } 
+    else if (which === 'sign') {
       return (viewportMaxwidth <= 400) ? viewportMaxwidth : 400;
     }
   };
@@ -1091,43 +1061,41 @@
 /* ══════════════════════════════════════════════════════════════════════
    Aplicar gap vertical quan la finestra de signes o transcripció està a sota del vídeo
 ═══════════════════════════════════════════════════════════════════════ */
+
 (function ($) {
   'use strict';
 
   if (!window.AblePlayer) return;
 
-  // Gap en píxels (ha de coincidir amb el valor del JavaScript d'Able Player)
   var gap = 5;
 
-  // Guardar la funció original
   var originalPositionDraggableWindow = AblePlayer.prototype.positionDraggableWindow;
 
-  // Override de la funció
   AblePlayer.prototype.positionDraggableWindow = function (which, width) {
-    // Cridar la funció original
+
     originalPositionDraggableWindow.apply(this, arguments);
 
-    // Aplicar marge per la finestra de signes
     if (which === 'sign' && this.$signWindow) {
-      // Comprovar si està en posició relative (a sota del vídeo)
+
       var position = this.$signWindow.css('position');
 
       if (position === 'relative') {
-        // Està a sota, aplicar margin-top
+
         this.$signWindow.css('margin-top', gap + 'px');
-      } else {
-        // Està al costat (absolute), treure el margin-top
+      } 
+      else {
+
         this.$signWindow.css('margin-top', '0');
       }
     }
 
-    // També aplicar per la finestra de transcripció si cal
     if (which === 'transcript' && this.$transcriptArea) {
       var position = this.$transcriptArea.css('position');
 
       if (position === 'relative') {
         this.$transcriptArea.css('margin-top', gap + 'px');
-      } else {
+      } 
+      else {
         this.$transcriptArea.css('margin-top', '0');
       }
     }
@@ -1137,16 +1105,16 @@
 
 /* ══════════════════════════════════════════════════════════════════════
    Subtítols: separar toggle i selector d'idioma (criteri 7.3) i millores
-   - Botó nou de CC toggle; el botó CC original passa a ser selector d'idioma/AD
+   - Button nou de CC toggle; el botó CC original passa a ser selector d'idioma/AD
    - Menú d'idioma accessible (tab/tecles, focus mòbil, grups Captions/AD)
    - Reordena botons (toggle, AD, LS, transcript, idioma, capítols)
    - Tria pista per defecte (prioritza captions def) i posa icona de llengua
    - Ajusta etiquetes d'audio-descripció i afegeix tooltip coherent
 ═══════════════════════════════════════════════════════════════════════ */
+
 (function ($) {
   if (!window.AblePlayer) return;
 
-  // Helper per escollir el track per defecte: prioritzar kind="captions", després def, després primer.
   function getPreferredCaptionTrack(player) {
     if (!player.captions || !player.captions.length) return null;
     var caps = player.captions;
@@ -1169,7 +1137,6 @@
     return track.label || track.language || 'AD';
   }
 
-  // Detecta AD oberta (vídeo alternatiu) i crea un track virtual amb l'idioma dels subtítols locals
   function hasOpenDescription(player) {
     if (!player) return false;
     if (player.hasOpenDesc) return true;
@@ -1183,20 +1150,22 @@
     if (!hasOpenDescription(player)) return null;
     if (player.descriptions && player.descriptions.length) return null; // ja hi ha AD tancada
 
-    // Busca idioma/etiqueta a partir de captions disponibles
     var cap = null;
     if (player.selectedCaptions) {
       cap = player.selectedCaptions;
-    } else if (player.captions && player.captions.length) {
+    } 
+    else if (player.captions && player.captions.length) {
       cap = player.captions.find(function (c) { return c.def; }) || player.captions[0];
-    } else if (player.tracks && player.tracks.length) {
+    } 
+    else if (player.tracks && player.tracks.length) {
       for (var i = 0; i < player.tracks.length; i++) {
         if (player.tracks[i].kind === 'captions' || player.tracks[i].kind === 'subtitles') {
           cap = player.tracks[i];
           break;
         }
       }
-    } else if (player.$media && player.$media.length) {
+    } 
+    else if (player.$media && player.$media.length) {
       var $track = player.$media.find('track[kind="captions"], track[kind="subtitles"]').first();
       if ($track && $track.length) {
         cap = { language: $track.attr('srclang'), label: $track.attr('label') };
@@ -1217,7 +1186,7 @@
 
 (function ($) {
   if (!window.AblePlayer) return;
-  // Conservar l'etiqueta original de la pista d'AD quan Able Player crea les descripcions
+  // Keep the original AD track label when Able Player creates descriptions
   var _origSetupDescriptions = AblePlayer.prototype.setupDescriptions;
   AblePlayer.prototype.setupDescriptions = function (track, cues) {
     _origSetupDescriptions.apply(this, arguments);
@@ -1261,7 +1230,6 @@
     return $menu;
   }
 
-  // Gestiona focus amb tabindex itinerant només sobre els elements seleccionables
   function focusLanguageMenuItem($menu, $item) {
     var selector = 'li[role="menuitemradio"]';
     var $items = $menu.find(selector);
@@ -1288,7 +1256,6 @@
     var $menu = ensureLanguagePopup(thisObj);
     $menu.empty();
 
-    // Prefix de traducció per a les seccions
     if (showSubs) {
       var captionsHeading = (thisObj.tt && thisObj.tt.prefHeadingCaptions) ? thisObj.tt.prefHeadingCaptions :
         (thisObj.tt && thisObj.tt.captions) ? thisObj.tt.captions : 'Captions';
@@ -1358,7 +1325,6 @@
       $menu.append($adGroup);
     }
 
-    // Navegació per teclat: només entre elements seleccionables (menuitemradio)
     var focusableSelector = 'li[role="menuitemradio"]';
     $menu.off('keydown').on('keydown.langmenu', function (e) {
       var $items = $menu.find(focusableSelector);
@@ -1378,14 +1344,17 @@
         e.preventDefault();
         nextIndex = (currentIndex + 1) % $items.length;
         focusLanguageMenuItem($menu, $items.eq(nextIndex));
-      } else if (backward) {
+      } 
+      else if (backward) {
         e.preventDefault();
         nextIndex = (currentIndex - 1 + $items.length) % $items.length;
         focusLanguageMenuItem($menu, $items.eq(nextIndex));
-      } else if (e.key === ' ' || e.key === 'Enter') {
+      } 
+      else if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();
         $current.trigger('click');
-      } else if (e.key === 'Escape') {
+      } 
+      else if (e.key === 'Escape') {
         e.preventDefault();
         thisObj.closePopups();
         thisObj.$ccButton.attr('aria-expanded', 'false');
@@ -1396,12 +1365,11 @@
     return $menu;
   }
 
-  // Inserta un botó nou per activar/desactivar subtítols i reutilitza el CC per idioma
   AblePlayer.prototype.addControls = function () {
     _addControls.apply(this, arguments);
 
     if (!this.$ccButton && this.descriptions && this.descriptions.length) {
-      // No botó de captions creat per AblePlayer (p. ex. sense subtítols) però tenim AD; en creem un mínim.
+
       var $langBtn = $('<div>', {
         role: 'button',
         tabindex: '0',
@@ -1410,13 +1378,14 @@
         'aria-expanded': 'false'
       });
       setLanguageIcon($langBtn);
-      // Col·locar-lo al contenidor dret, abans del primer separador (able-pipe)
+      // Place it in the right container, before the first separator (able-pipe)
       var $right = this.$controllerDiv.find('.able-right-controls');
       if (!$right.length) $right = this.$controllerDiv;
       var $pipe = $right.find('.able-pipe').first();
       if ($pipe.length) {
         $langBtn.insertBefore($pipe);
-      } else {
+      } 
+      else {
         $right.append($langBtn);
       }
       this.$ccButton = $langBtn;
@@ -1424,9 +1393,8 @@
 
     if (!this.$ccButton) return;
 
-    // El botó existent de CC ara és el selector d'idioma
     this.$ccLanguageButton = this.$ccButton;
-    // Canviar icona per diferenciar-lo del nou toggle i indicar llengua
+
     setLanguageIcon(this.$ccLanguageButton);
 
     var toggleGone = !this.$ccToggleButton || !$.contains(document, this.$ccToggleButton[0]);
@@ -1458,7 +1426,8 @@
           tooltipX = position.left - tooltipWidth / 2;
           if (tooltipX < 0) tooltipX = 2;
           tooltipStyle = { left: tooltipX + 'px', right: '', top: tooltipY + 'px' };
-        } else {
+        } 
+        else {
           tooltipX = position.right - tooltipWidth / 2;
           if (tooltipX < 0) tooltipX = 2;
           tooltipStyle = { left: '', right: tooltipX + 'px', top: tooltipY + 'px' };
@@ -1479,7 +1448,6 @@
     }
 
     // Reordenar amb l'ordre requerit:
-    // 1) CC toggle, 2) AD, 3) Llengua de signes, 4) Transcripció, 5) Idioma (CC), 6) Capítols
     var $rightContainer = this.$controllerDiv.find('.able-right-controls');
     if (!$rightContainer.length) $rightContainer = this.$controllerDiv;
     var $pipe = $rightContainer.find('.able-pipe').first();
@@ -1488,7 +1456,8 @@
       $el.detach();
       if ($pipe.length) {
         $el.insertBefore($pipe);
-      } else {
+      } 
+      else {
         $el.appendTo($rightContainer);
       }
     };
@@ -1504,7 +1473,6 @@
     this.refreshControls('captions');
   };
 
-  // Nou toggle: sempre on/off en un sol clic, sense menú
   AblePlayer.prototype.handleCaptionToggle = function () {
     var captions = this.captions || [];
 
@@ -1527,9 +1495,11 @@
       this.updateCookie('prefCaptions');
       if (this.usingYouTubeCaptions && this.youTubePlayer) {
         this.youTubePlayer.unloadModule('captions');
-      } else if (this.usingVimeoCaptions && this.vimeoPlayer) {
+      } 
+       if (this.usingVimeoCaptions && this.vimeoPlayer) {
         this.vimeoPlayer.disableTextTrack();
-      } else if (this.$captionsWrapper) {
+      } 
+      else if (this.$captionsWrapper) {
         this.$captionsWrapper.hide();
       }
       if (this.mediaType === 'audio' && this.$captionsContainer) {
@@ -1538,7 +1508,8 @@
       if (this.captionsPopup) {
         this.updateCaptionsMenu();
       }
-    } else {
+    } 
+    else {
       var track = getPreferredCaptionTrack(this);
       if (!track && typeof _origHandleCaptionToggle === 'function') {
         return _origHandleCaptionToggle.apply(this, arguments);
@@ -1558,12 +1529,15 @@
           } catch (e) {
             this.captionLangPending = this.captionLang;
           }
-        } else {
+        } 
+        else {
           this.captionLangPending = this.captionLang;
         }
-      } else if (this.usingVimeoCaptions && this.vimeoPlayer) {
+      } 
+      else if (this.usingVimeoCaptions && this.vimeoPlayer) {
         this.vimeoPlayer.enableTextTrack(this.captionLang).catch(function () { });
-      } else {
+      } 
+      else {
         this.syncTrackLanguages('captions', this.captionLang);
         if (!this.swappingSrc) {
           this.updateCaption(this.elapsed);
@@ -1584,7 +1558,6 @@
     this.refreshControls('captions');
   };
 
-  // El botó CC ara només obre el menú d'idiomes
   AblePlayer.prototype.handleCaptionLanguage = function () {
     var thisObj = this;
     var hasSubs = this.captionsOn && this.captions && this.captions.length;
@@ -1599,7 +1572,8 @@
       this.hidingPopup = false;
       this.$ccButton.attr('aria-expanded', 'false');
       this.waitThenFocus(this.$ccButton);
-    } else {
+    } 
+    else {
       this.closePopups();
       $menu.show();
       this.$ccButton.attr('aria-expanded', 'true');
@@ -1611,7 +1585,6 @@
         var margin = 5;
         var left = buttonPos.left;
 
-        // Evitar que el menú surti per la dreta en zooms grans (p. ex. 400%)
         if ((left + menuWidth) > (containerWidth - margin)) {
           left = Math.max(margin, containerWidth - margin - menuWidth);
         }
@@ -1623,7 +1596,6 @@
     }
   };
 
-  // Redirigeix clics segons el nou mapping
   AblePlayer.prototype.onClickPlayerButton = function (el) {
     var whichButton = this.getButtonNameFromClass($(el).attr('class'));
     if (whichButton === 'captions-toggle') {
@@ -1637,8 +1609,7 @@
     return _onClick.apply(this, arguments);
   };
 
-  // Manté visible "Velocitat: 1x" amb zoom 400% abaixant el llindar a 100px
-  // i refresca els controls (botons, estat, etc.).
+  // and refresh controls (buttons, status, etc.).
   AblePlayer.prototype.refreshControls = function (context, duration, elapsed) {
     _refresh.apply(this, arguments);
 
@@ -1651,11 +1622,13 @@
         if (speedHeight > (statusBarHeight + 5)) {
           $speed.hide();
           this.hidingSpeed = true;
-        } else {
+        } 
+        else {
           if (this.$statusBarDiv.width() < statusBarWidthBreakpoint) {
             $speed.hide();
             this.hidingSpeed = true;
-          } else {
+          } 
+          else {
             $speed.show();
             this.hidingSpeed = false;
           }
@@ -1676,7 +1649,7 @@
     }
 
     if (this.$ccButton) {
-      // Considera AD oberta (p. ex. vídeo de YouTube alternatiu) perquè l'etiqueta mostri també audiodescripció
+
       var hasAD = (this.descriptions && this.descriptions.length) || hasOpenDescription(this);
       var showLangButton = (this.captionsOn && hasCaptions) || (this.descOn && hasAD);
       if (showLangButton) {
@@ -1695,12 +1668,14 @@
         var langLabel;
         if (captionsActive && adActive) {
           langLabel = langPrefix + baseCaptionLabel + ' / ' + adLabel;
-        } else if (captionsActive) {
+        } 
+        else if (captionsActive) {
           langLabel = langPrefix + baseCaptionLabel;
-        } else if (adActive) {
+        } 
+        else if (adActive) {
           langLabel = langPrefix + adLabel;
-        } else {
-          // cap activada, mostra les dues opcions disponibles
+        } 
+        else {
           langLabel = langPrefix + baseCaptionLabel + ' / ' + adLabel;
         }
         this.$ccButton.show()
@@ -1714,7 +1689,8 @@
           })
           .removeClass('buttonOff');
         this.$ccButton.find('span.able-clipped').text(langLabel);
-      } else {
+      } 
+      else {
         if (this.captionsPopup && this.captionsPopup.is(':visible')) {
           this.captionsPopup.hide();
         }
@@ -1727,7 +1703,6 @@
     }
   };
 
-  // Mantenir el menú d’idioma coherent amb el caption seleccionat
   AblePlayer.prototype.updateCaptionsMenu = function (lang) {
     if (!this.captionsPopup) return;
     this.captionsPopup.find('li[data-kind="captions"]').attr('aria-checked', 'false');
@@ -1743,13 +1718,13 @@
 /* ══════════════════════════════════════════════════════════════════════
    Desacoblar idiomes de subtítols i AD (evitar sync automàtic)
 ═══════════════════════════════════════════════════════════════════════ */
+
 (function ($) {
   if (!window.AblePlayer) return;
 
   AblePlayer.prototype.syncTrackLanguages = function (source, language) {
     var i, captions, descriptions, chapters, meta;
 
-    // Buscar pistes que coincideixin amb l'idioma
     for (i = 0; i < this.captions.length; i++) {
       if (this.captions[i].language === language) captions = this.captions[i];
     }
@@ -1774,7 +1749,6 @@
       this.transcriptChapters = chapters || this.transcriptChapters;
       this.transcriptDescriptions = descriptions || this.transcriptDescriptions;
 
-      // Només establir AD per defecte a l'inici, no quan es canvia l'idioma dels subtítols
       if (source === 'init' && !this.selectedDescriptions && this.descriptions.length) {
         var defaultDesc = descriptions ||
           this.descriptions.find(function (d) { return d.def; }) ||
@@ -1783,7 +1757,8 @@
       }
 
       this.updateChaptersList();
-    } else if (source === 'transcript') {
+    } 
+    else if (source === 'transcript') {
       this.transcriptCaptions = captions || this.transcriptCaptions;
       this.transcriptChapters = chapters || this.transcriptChapters;
       this.transcriptDescriptions = descriptions || this.transcriptDescriptions;
@@ -1799,10 +1774,10 @@
 /* ══════════════════════════════════════════════════════════════════════
    Veu sintètica d’AD en l’idioma de la pista d’AD (no del web/CC)
 ═══════════════════════════════════════════════════════════════════════ */
+
 (function ($) {
   if (!window.AblePlayer) return;
 
-  // Prioritza la llengua de la descripció seleccionada per filtrar veus disponibles
   AblePlayer.prototype.getBrowserVoices = function () {
     var voices, descLangs, voiceLang, preferredLang;
 
@@ -1831,7 +1806,6 @@
     return false;
   };
 
-  // Força l’idioma de l’utterance a la pista AD triada (si n’hi ha)
   var _origAnnounceDesc = AblePlayer.prototype.announceDescriptionText;
   AblePlayer.prototype.announceDescriptionText = function () {
     var originalLang = this.lang;
@@ -1847,6 +1821,7 @@
    YouTube captions: Timeout de 500ms per resoldre la promesa i evitar que el
    player perdi controls quan YouTube no retorna pistes de captions   
 ══════════════════════════════════════════════════════════════════════════════ */
+
 (function ($) {
   if (!window.AblePlayer || !AblePlayer.prototype.getYouTubeCaptionTracks) return;
 
@@ -1900,7 +1875,7 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    ARIA-LABEL DEL ROLE="REGION" DEL REPRODUCTOR, TANT EN ÀUDIO COM EN VÍDEO
 ══════════════════════════════════════════════════════════════════════════════ */
-// Utilitza les 3 primeres claus de traduccions per cada idioma, si algun dia canvien caldrà adaptar aquest codi.
+
 (function patchPlayerRegionAriaLabel() {
   function getPlayerRegionLabel(playerInstance) {
     var tt = playerInstance.tt || {};
@@ -1908,7 +1883,6 @@
     var mediaLabel = tt[mediaType] || mediaType;
     var playerHeading = tt.playerHeading || 'player';
 
-    // Construcció basada només en traduccions existents
     if (playerHeading && mediaLabel) {
       return playerHeading + ' ' + mediaLabel;
     }
