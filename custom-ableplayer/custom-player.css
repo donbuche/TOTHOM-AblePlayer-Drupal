@@ -1,0 +1,1084 @@
+/* =============================================================================
+ ======================== CUSTOM STYLE FOR ABLE PLAYER =========================
+ ============================================================================ */
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   Colors - variables
+═════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+   --able-white: #fff;
+   --able-black: #000;
+   --able-red: #FF0033;
+   --able-light-red: #ff597a;
+   --able-dark-red: #B80025;
+   --able-light-rose: #ffdae2;
+   --able-transparent-gray: rgba(0, 0, 0, 0.2);
+   --able-grey-dark: #262626;
+   --able-grey-medium: #3c3c3c;
+   --able-grey-low: #8C8C8C;
+}
+
+.able-wrapper,
+.able-modal-dialog {
+   --able-seekbar-background: var(--able-white);
+   --able-seekbar-loaded: var(--able-grey-low);
+   --able-seekbar-played: var(--able-red);
+   --able-seekbar-head: var(--able-red);
+   --able-controller-background: var(--able-black);
+   --able-separator-color: var(--able-grey-low);
+   --able-statusbar-background: var(--able-grey-dark);
+   --able-default-description-background: var(--able-grey-dark);
+   --able-modal-color: var(--able-white);
+   --able-modal-background: var(--able-grey-dark);
+   --able-sign-background: var(--able-black);
+   --able-current-chapter-color: var(--able-white);
+   --able-tooltip-border: var(--able-white);
+   --able-tooltip-color: var(--able-white);
+   --able-tooltip-background: var(--able-black);
+   --able-alert-background: var(--able-light-rose);
+   --able-menu-border: var(--able-grey-dark);
+   --able-menu-background: var(--able-grey-dark);
+   --able-menu-focus-background: var(--able-white);
+   --able-cue-audio-description-color: var(--able-dark-gray);
+}
+
+.able-transcript-area {
+   --able-controller-background: var(--able-grey-dark);
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   Border radius - variables
+═════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+   --able-border-radius-medium: 8px;
+   --able-border-radius-large: 14px;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   Font family
+═════════════════════════════════════════════════════════════════════════════ */
+
+.able-wrapper,
+.able-modal-dialog,
+.able-transcript-area {
+   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   General
+═════════════════════════════════════════════════════════════════════════════ */
+/* Restaurem el z-index per evitar que els vídeos quedin per sobre d'altres elements de la pàgina (de 5000 a 0) */
+.able {
+   z-index: 0;
+}
+
+/* Cantonades arrodonides */
+.able video,
+.able iframe {
+   border-top-left-radius: var(--able-border-radius-large);
+   border-top-right-radius: var(--able-border-radius-large);
+}
+
+.able-status-bar,
+.able-transcript {
+   border-bottom-left-radius: var(--able-border-radius-large);
+   border-bottom-right-radius: var(--able-border-radius-large);
+}
+
+.able-transcript-area,
+.able-sign-window {
+   border-radius: var(--able-border-radius-large);
+   overflow: hidden;
+}
+
+.able-wrapper .able button.able-big-play-button {
+   border-radius: var(--able-border-radius-large);
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   Media container (correcció per centrar videos amb diferents aspect ratios)
+═════════════════════════════════════════════════════════════════════════════ */
+.able-media-container {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background-color: var(--able-black);
+   border-top-left-radius: var(--able-border-radius-large);
+   border-top-right-radius: var(--able-border-radius-large);
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   Big Play Button
+═════════════════════════════════════════════════════════════════════════════ */
+.able-big-play-button svg {
+   padding: 0 0 0 16px !important;
+   width: 6em;
+   height: 6em;
+}
+
+.able-wrapper .able button.able-big-play-button {
+   opacity: 0.9 !important;
+}
+
+.able-wrapper .able button.able-big-play-button:hover svg {
+   outline: revert;
+   fill: var(--able-red);
+}
+
+.able-wrapper .able button.able-big-play-button:focus-visible svg {
+   outline: 1px auto Highlight;
+   outline: 1px auto -webkit-focus-ring-color;
+   fill: var(--able-red);
+}
+
+.able-wrapper .able button.able-big-play-button {
+   cursor: pointer;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   CAPTIONS FIXATS
+═════════════════════════════════════════════════════════════════════════════ */
+
+/* Mida minima */
+div.able-vidcap-container div.able-captions-below {
+   min-height: 4.3em;
+}
+
+/* Posició centrada */
+div.able-vidcap-container div.able-captions-below {
+   align-content: center;
+}
+
+/* Padding caixa captions */
+div.able-captions-wrapper:not(.able-captions-overlay) {
+   padding: 0;
+}
+
+.able-captions-wrapper {
+   padding: 0.5em 0 !important;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   BARRA DE TEMPS 
+═════════════════════════════════════════════════════════════════════════════ */
+
+.able-seekbar-wrapper {
+   padding: 0.5em 0.75em 0.25em 0.75em;
+}
+
+.able-seekbar {
+   margin: 6px 0;
+   height: .3em;
+   border: none !important;
+   cursor: pointer;
+}
+
+/* Augment zona clicable de la barra */
+.able-seekbar::before {
+   content: '';
+   position: absolute;
+   top: -12px;
+   bottom: -12px;
+   left: 0;
+   right: 0;
+}
+
+/* Bolet */
+.able-seekbar-head {
+   min-width: 18px;
+   min-height: 18px;
+   width: 18px;
+   height: 18px;
+   outline: none;
+   border: none;
+   transition: box-shadow 0.2s ease;
+   cursor: pointer;
+}
+
+/* Bolet HOVER */
+.able-seekbar-head:hover {
+   outline: none !important;
+   box-shadow: 0 0 0 2px var(--able-red);
+}
+
+/* Bolet FOCUS */
+.able-seekbar-head:focus-visible {
+   outline: revert;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   Botons
+═════════════════════════════════════════════════════════════════════════════ */
+/* Focus visible */
+.able-player div[role=button]:focus-visible {
+   outline: revert;
+}
+
+/* Botó Play - igualar padding amb els altres botons */
+.able-controller div.able-button-handler-play[role=button] {
+   padding: 2px;
+}
+
+.able-controller .buttonOff {
+   opacity: 1;
+}
+
+.able-controller .buttonOff svg {
+   fill: var(--able-grey-low) !important;
+}
+
+.able-controller .buttonOff svg:hover {
+   fill: var(--able-dark-red) !important;
+}
+
+.able-controller div[role=button] {
+   display: inline-flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.able-pipe {
+   top: revert;
+}
+
+.able-left-controls,
+.able-right-controls {
+   gap: 6px;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   TOOLTIPS
+═════════════════════════════════════════════════════════════════════════════ */
+
+/* Tooltip general */
+.able-tooltip {
+   font-size: .8em;
+   margin-top: -86px;
+   padding: 4px 4px;
+   line-height: 1em;
+   border: none;
+   border-radius: var(--able-border-radius-medium);
+   cursor: default;
+   z-index: 9000;
+}
+
+@media (max-width: 500px) {
+   .able-tooltip {
+      margin-top: revert;
+   }
+}
+
+/* Tooltip de la barra del temps - pujar-lo més amunt */
+.able-seekbar-wrapper .able-tooltip {
+   bottom: 22px !important;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   CONTROLS DE REPRODUCCIÓ 
+═════════════════════════════════════════════════════════════════════════════ */
+
+/* HOVER - Treure l'outline + Punters visibles */
+.able-controller div[role=button]:hover {
+   outline: none;
+   cursor: pointer;
+   color: var(--able-red);
+}
+
+/* HOVER - Color icones */
+.able-wrapper div[role=button] svg:hover,
+.able-controller div[role=button]:hover svg {
+   fill: var(--able-red) !important;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   SLIDER VOLUME
+═════════════════════════════════════════════════════════════════════════════ */
+
+.able-volume-slider {
+   width: 32px;
+   height: 80px;
+   background-color: var(--able-black);
+   padding: 0px;
+   bottom: 0;
+   top: -68px;
+   outline: none;
+   border-top-left-radius: var(--able-border-radius-medium);
+   z-index: 99999;
+}
+
+.able-volume-slider input[type=range] {
+   width: 60px;
+   height: 5px;
+   border-radius: 0;
+   -webkit-appearance: none;
+   appearance: none;
+   transform: rotate(-90deg);
+   transform-origin: right;
+   position: absolute;
+   right: 16px;
+   top: 8px;
+   border: none;
+   padding: 0;
+   cursor: pointer;
+}
+
+.able-volume-slider input[type=range]:hover,
+.able-volume-slider input[type=range]:active {
+   outline: none !important;
+   border: none !important;
+   box-shadow: none !important;
+}
+
+.able-volume-slider input[type=range]::-webkit-slider-thumb:focus,
+.able-volume-slider input[type=range]::-webkit-slider-thumb:active {
+   outline: none !important;
+   border: none !important;
+   box-shadow: none !important;
+}
+
+/* Thumb (puntet) - NORMAL */
+.able-volume-slider input[type=range]::-webkit-slider-thumb {
+   -webkit-appearance: none;
+   appearance: none;
+   width: 18px;
+   height: 18px;
+   background: var(--able-white);
+   border-radius: 50%;
+   cursor: pointer;
+   border: none !important;
+   box-shadow: none !important;
+   outline: none !important;
+}
+
+/* Thumb (puntet) - HOVER */
+.able-volume-slider input[type=range]::-webkit-slider-thumb:hover {
+   background: var(--able-white);
+   box-shadow: 0 0 0 2px var(--able-white) !important;
+   transition: box-shadow 0.2s ease;
+   border: none !important;
+   outline: none !important;
+}
+
+/* FIREFOX */
+.able-volume-slider input[type=range]::-moz-range-track {
+   background: transparent;
+   width: 60px !important;
+   height: 5px !important;
+   outline: none;
+   border: none;
+}
+
+.able-volume-slider input[type=range]::-moz-range-thumb {
+   width: 1em;
+   height: 1em;
+   background: var(--able-white);
+   border-radius: 50%;
+   border: none;
+   box-shadow: none;
+   outline: none;
+}
+
+.able-volume-slider input[type=range]::-moz-range-thumb:hover {
+   background: var(--able-white);
+   box-shadow: 0 0 0 2px var(--able-white);
+   transition: box-shadow 0.2s ease;
+   border: none;
+   outline: none;
+}
+
+.able-volume-slider input[type=range]::-moz-focus-outer {
+   border: 0 !important;
+   outline: none !important;
+}
+
+@-moz-document url-prefix() {
+   .able-volume-slider input[type=range] {
+      transform: none;
+      width: 5px;
+      height: 60px;
+      right: 12px;
+      top: 8px;
+   }
+}
+
+/* Restaurar l'outline del navegador quan es fa focus a un input*/
+.able-controller input:focus {
+   outline: revert;
+   outline-offset: 4px;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   BARRA D'INFORMACIÓ INFERIOR - STATUS BAR
+═════════════════════════════════════════════════════════════════════════════ */
+
+.able-status-bar {
+   justify-content: space-between;
+   align-items: center;
+   height: auto;
+   padding: 8px 12px;
+   word-wrap: break-word;
+   overflow-wrap: break-word;
+   -webkit-hyphens: auto;
+   -moz-hyphens: auto;
+   hyphens: auto;
+   font-size: 13px;
+   line-height: 16px;
+   cursor: default;
+}
+
+/* Evitar el moviment del timer,speed o status de la barra d'estat en canviar el seu contingut */
+.able-status-bar span.able-timer {
+   width: 32%;
+}
+
+.able-status-bar span.able-speed {
+   width: 36%;
+}
+
+.able-status-bar span.able-status {
+   width: 32%;
+}
+
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   TRANSCRIPCIONS
+═════════════════════════════════════════════════════════════════════════════ */
+
+/* Barra d'idioma transcripcions*/
+.able-window-toolbar {
+   padding: 0.8em;
+   flex-wrap: wrap;
+}
+
+/* Popup menú preferències Modal - Posició */
+.able-window-toolbar .able-popup {
+   top: 50px !important;
+   left: 48px;
+   background: var(--able-menu-background);
+}
+
+
+/* Optimització de Transcripcions i Video de llenguatge de signes en pantalles menors a 480px */
+@media (width < 480px) {
+
+   /* Només afecta als diàlegs arrossegables, no als transcripcions fixes */
+   .able-sign-window:not([style*="display: none"]),
+   .able-transcript-area[role="dialog"]:not([style*="display: none"]) {
+      position: static !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 16px 0 0 0 !important;
+      left: auto !important;
+      top: auto !important;
+      right: auto !important;
+      bottom: auto !important;
+   }
+
+   /* Desactivar cursor d'arrossegament */
+   .able-drag {
+      cursor: default !important;
+      pointer-events: none;
+   }
+
+   /* Desactivar cursor d'arrossegament en hover */
+   .able-draggable:hover {
+      cursor: default !important;
+   }
+
+   /* Ocultar botó de redimensionar */
+   .able-resizable {
+      display: none !important;
+   }
+
+   /* Ocultar botó de preferències (menú) */
+   .able-window-toolbar .able-button-handler-preferences {
+      display: none !important;
+   }
+
+   /* Assegurar que el contingut de la transcripció s'adapti */
+   .able-transcript {
+      width: 100% !important;
+      padding-bottom: 1rem;
+   }
+
+   /* Vídeo de signes també ha d'ocupar l'amplada completa */
+   .able-sign-window video {
+      width: 100% !important;
+      max-width: 100% !important;
+   }
+}
+
+/* Contenidor intern */
+.able-transcript-area {
+   height: auto;
+   width: auto;
+   padding-bottom: 0;
+   border-width: 1.8px;
+}
+
+/* Correcció del Highlight padding per evita que les lletres descendents quedin tallades en fer zoom */
+.able-highlight {
+   padding: .02em .1em;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   PREFERÈNCES D'USUARI
+═════════════════════════════════════════════════════════════════════════════ */
+
+/* Popup menú preferències*/
+.able-popup {
+   transform: translateY(-2.5em);
+   border-radius: var(--able-border-radius-large) !important;
+   font-size: 1em;
+   outline: none !important;
+   padding-top: 0.4em !important;
+   padding-bottom: 0.4em !important;
+   max-height: 260px;
+   overflow: auto;
+}
+
+.able-popup,
+.able-popup ul {
+   list-style-type: none;
+   padding-left: 0;
+}
+
+.able-popup li {
+   padding: .2em .8em !important;
+   margin: 0.4em 0 !important;
+}
+
+.able-popup li.able-focus {
+   background-color: transparent !important;
+   color: var(--able-white) !important;
+}
+
+.able-popup li:focus {
+   background-color: transparent !important;
+   color: var(--able-menu-focus-color);
+   outline: none;
+}
+
+.able-popup li:focus-visible,
+.able-popup li.able-focus:focus-visible {
+   background-color: var(--able-menu-focus-background) !important;
+   color: var(--able-menu-focus-color) !important;
+}
+
+.able-popup li:not(.able-lang-group):hover {
+   background-color: var(--able-menu-focus-background) !important;
+   color: var(--able-menu-focus-color) !important;
+   outline: none;
+}
+
+.able-popup li:hover {
+   outline: none !important;
+}
+
+.able-popup li:not(.able-lang-group) {
+   cursor: pointer;
+}
+
+.able-popup .able-lang-group:hover {
+   background-color: transparent !important;
+   color: inherit !important;
+}
+
+/* Capçaleres dels grups d'idiomes */
+.able-popup .able-popup-heading {
+   display: block;
+   padding: 0.25em 0.8em;
+   margin: 0 0 0.2em 0;
+   background-color: var(--able-grey-medium);
+   color: var(--able-white);
+   font-weight: 600;
+   border-radius: var(--able-border-radius-large);
+}
+
+/* No desplaçar el text quan hi ha el check de selecció */
+.able-popup .able-lang-list li[role="menuitemradio"] {
+   position: relative;
+   padding-left: 1.4em !important;
+}
+
+.able-popup .able-lang-list li[aria-checked="true"]::before {
+   position: absolute;
+   left: 0;
+   top: 50%;
+   transform: translateY(-50%);
+   margin-right: 0 !important;
+}
+
+.able ul.able-popup li:first-of-type,
+ul.able-popup li:first-of-type {
+   border-radius: 0;
+}
+
+.able ul.able-popup li:last-of-type,
+ul.able-popup li:last-of-type {
+   border-radius: 0;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   MODAL DIALOGS
+═════════════════════════════════════════════════════════════════════════════ */
+/* General */
+div.able-modal-dialog {
+   border: none;
+   border-radius: var(--able-border-radius-large);
+   width: 48em;
+   max-width: 96%;
+}
+
+/* Header de 3 columnes  */
+.able-modal-header {
+   display: grid;
+   grid-template-columns: 1fr auto 1fr;
+   align-items: center;
+   gap: .5rem;
+}
+
+/* H1 al centre */
+.able-modal-header>h1 {
+   grid-column: 2;
+   justify-self: center;
+}
+
+/* Botó de tancar a la dreta */
+.able-modal-header>.modalCloseButton {
+   grid-column: 3;
+   justify-self: end;
+}
+
+/* Modal dialog - H1 */
+div.able-modal-dialog h1 {
+   margin: 1em 0;
+   font-size: 2em !important;
+   line-height: 1.3em !important;
+   color: var(--able-white) !important;
+   white-space: normal;
+   overflow-wrap: anywhere;
+   word-break: break-word;
+}
+
+/* Modal dialog - H2 */
+.able-modal-dialog h2 {
+   text-align: left !important;
+}
+
+.able-prefs-form h2 {
+   margin-bottom: 0.8em;
+   font-size: 1.5em !important;
+   line-height: 1.3em !important;
+   color: var(--able-white) !important;
+}
+
+/* Modal dialog - H3 */
+.able-modal-dialog h3 {
+   font-size: 1.2em !important;
+   line-height: 1.3em !important;
+   color: var(--able-white) !important;
+}
+
+/* Modal dialog - p */
+div.able-modal-dialog p {
+   font-size: 1em !important;
+   line-height: 1.5em !important;
+   text-align: left !important;
+   color: var(--able-white) !important;
+   margin-bottom: 1em;
+}
+
+div.able-modal-dialog ul {
+   padding-inline-start: 1em;
+}
+
+.able-prefs-captions label {
+   text-align: start;
+}
+
+/* Modal dialog - ul */
+.able-prefs-form ul {
+   margin-bottom: 2em;
+}
+
+/* Audiodescripció*/
+.able-prefs-descriptions .able-prefs-captions>div,
+.able-prefs-descriptions>div {
+   gap: 0.5em;
+   align-items: center;
+   justify-content: flex-start;
+   flex-wrap: nowrap;
+   margin-bottom: 0.5em;
+}
+
+.able-prefs-descriptions label {
+   text-align: left;
+   min-width: 120px;
+}
+
+.able-prefs-descriptions select {
+   padding: 0.5em;
+   padding-right: 50px;
+   color: var(--able-white);
+   background-color: var(--able-grey-medium);
+   border: 1px solid var(--able-white);
+   border-radius: var(--able-border-radius-medium);
+   cursor: pointer;
+   min-width: 150px;
+   flex-shrink: 0;
+}
+
+/* Modal dialog - Preferències dels subtítols */
+.able-prefs-captions {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+   gap: 1rem 2rem;
+   padding: 1rem;
+}
+
+.able-prefs-captions select {
+   padding: 0.5em;
+   color: var(--able-white);
+   background-color: var(--able-grey-medium);
+   border: 1px solid var(--able-white);
+   border-radius: var(--able-border-radius-medium);
+   cursor: pointer;
+   width: 100%;
+}
+
+.able-prefs-captions select:hover,
+.able-prefs-descriptions select:hover {
+   outline: 2px solid var(--able-white);
+}
+
+.able-prefs-captions select:focus,
+.able-prefs-descriptions select:focus {
+   outline: revert;
+   outline-offset: 3px;
+}
+
+div.able-prefDescPause {
+   margin-top: 2em;
+}
+
+/* Estil per les opcions del select */
+.able-prefs-captions select option,
+.able-prefs-descriptions select option {
+   cursor: pointer;
+   background-color: var(--able-grey-medium);
+   color: var(--able-white);
+}
+
+.able-prefs-captions select option:hover,
+.able-prefs-captions select option:focus,
+.able-prefs-descriptions select option:hover,
+.able-prefs-descriptions select option:focus {
+   background-color: var(--able-red) !important;
+   cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+
+   .able-prefs-captions,
+   .able-prefs-descriptions {
+      grid-template-columns: 1fr;
+   }
+}
+
+.able-prefs-captions {
+   margin: 1em !important;
+}
+
+.able-prefs-form div[role=group] {
+   padding: 1rem 0 0 0;
+}
+
+.able-prefs-keyboard {
+   margin-bottom: 2em;
+}
+
+/* Previsualització subtítols */
+.able-captions-sample {
+   margin: 2em 1em;
+   padding: 0.5em;
+   box-shadow: 0 0 3em rgba(255, 255, 255, 0.3);
+}
+
+/* Text de mostra Audiodescripció */
+.able-desc-sample {
+   margin: 2em 1em;
+   box-shadow: 0 0 3em rgba(255, 255, 255, 0.3);
+}
+
+/* Dreceres de teclat */
+span.able-modkey,
+span.able-modkey-alt,
+span.able-modkey-ctrl,
+span.able-modkey-shift {
+   color: var(--able-light-red);
+}
+
+.able-prefAltKey,
+.able-prefCtrlKey,
+.able-prefShiftKey {
+   margin-bottom: 0.2em;
+}
+
+.able-prefs-form-keyboard li {
+   margin-bottom: 0.2em;
+}
+
+/* Checkboxs i posició dels textos circumdants */
+input[type="checkbox"] {
+   width: 24px;
+   height: 24px;
+   min-width: 24px;
+   min-height: 24px;
+   accent-color: var(--able-red);
+   cursor: pointer;
+}
+
+.able-prefAltKey,
+.able-prefCtrlKey,
+.able-prefShiftKey,
+.able-prefHighlight,
+.able-prefTabbable {
+   display: flex;
+   gap: 0.5em;
+   align-items: center;
+   margin-bottom: 0.5em;
+}
+
+.able-window-toolbar>div {
+   align-items: center;
+}
+
+.transcript-language-select-wrapper select {
+   padding: 0.3em;
+   color: var(--able-white);
+   background-color: var(--able-grey-medium);
+   border: 1px solid var(--able-white);
+   border-radius: var(--able-border-radius-medium);
+   cursor: pointer;
+   width: auto;
+}
+
+.transcript-language-select-wrapper select:hover {
+   outline: 2px solid var(--able-white);
+}
+
+.transcript-language-select-wrapper label {
+   vertical-align: revert !important;
+}
+
+.able-controller div[role=button]:focus,
+.able-controller input:focus,
+.able-seekbar-head:focus,
+.able-window-toolbar input:focus,
+.able-window-toolbar select:focus {
+   outline: revert !important;
+   outline-offset: 1px;
+}
+
+/* Enllaços dins els modals */
+.able-modal-dialog a {
+   color: white;
+   text-underline-offset: 3px;
+}
+
+/* Llistes a l'About */
+.able-about-more-info-list {
+   margin: 0 0 1rem 1rem;
+   padding: 0;
+}
+
+.able-about-more-info-list li {
+   margin-bottom: 0.5rem;
+
+}
+
+/* Modal redimensionar la transcripció o video de signes */
+.able-resize-form label {
+   margin-bottom: 0.5em;
+}
+
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   MODAL DIALOGS - BUTTONS
+═════════════════════════════════════════════════════════════════════════════ */
+.able-prefs-buttons {
+   gap: 24px;
+   margin-top: 2rem;
+}
+
+button.modal-button {
+   padding: 0.5em 1em !important;
+   border: none;
+   border-radius: var(--able-border-radius-large);
+   background-color: var(--able-white) !important;
+   color: var(--able-black) !important;
+   font-weight: 600 !important;
+   cursor: pointer;
+}
+
+button.modal-button:hover {
+   padding: 0.5em 1em !important;
+   background-color: var(--able-red) !important;
+   color: var(--able-black) !important;
+}
+
+/* Botó de tancament modal */
+.able-modal-dialog .modalCloseButton {
+   cursor: pointer;
+   border: none;
+}
+
+.able-modal-dialog .modalCloseButton:hover {
+   color: var(--able-red);
+}
+
+.able-modal-dialog .modalCloseButton:focus {
+   outline: revert !important;
+}
+
+.able-modal-dialog button {
+   outline: none !important;
+   padding: 2px;
+}
+
+.able-modal-dialog .modalCloseButton svg {
+   width: 1.5em;
+   height: 1.5em;
+}
+
+button.modal-button:focus-visible {
+   outline: 2px solid var(--able-white) !important;
+}
+
+div.able-modal-dialog button:focus,
+div.able-modal-dialog button:hover,
+div.able-modal-dialog input:focus,
+.transcript-container input:focus {
+   outline: revert;
+   outline-offset: 3px;
+}
+
+.able-prefs-buttons {
+   justify-content: center;
+}
+
+.able-modal-dialog button {
+   font-size: 1em;
+}
+
+.able-modal-dialog input:hover,
+.able-window-toolbar input:hover {
+   outline: 2px solid var(--able-white) !important;
+   outline-offset: 3px;
+}
+
+/* BOTÓ PREFERENCIES - TRANSCRIPCIÓ I LLENGUATGE DE SIGNES - PADDING */
+.able-window-toolbar .able-button-handler-preferences {
+   padding: 2px;
+}
+
+/* BOTÓ PREFERENCIES - TRANSCRIPCIÓ I LLENGUATGE DE SIGNES - SVG SIZE */
+.able-window-toolbar .able-button-handler-preferences svg {
+   min-width: 20px;
+   min-height: 20px;
+}
+
+/* BOTÓ PREFERENCIES - TRANSCRIPCIÓ I LLENGUATGE DE SIGNES - FOCUS */
+.able-window-toolbar .able-button-handler-preferences:focus {
+   outline: revert !important;
+   outline-offset: 3px !important;
+   line-height: 0;
+}
+
+/* BOTÓ PREFERENCIES - TRANSCRIPCIÓ I LLENGUATGE DE SIGNES - HOVER */
+.able-window-toolbar .able-button-handler-preferences:hover {
+   outline: revert !important;
+   cursor: pointer;
+   color: var(--able-red);
+}
+
+/* Border transcripció en mode Drag */
+.able-drag {
+   border: none;
+   outline: 1px auto Highlight;
+   outline: 1px auto -webkit-focus-ring-color;
+   outline-offset: 2px;
+}
+
+/* Botó de redimensionar el transcript */
+.able-resizable {
+   bottom: 2px;
+   right: 15px;
+   width: 24px;
+   height: 24px;
+}
+
+/* Botó de redimensionar el trasnscript - HOVER */
+.able-resizable:hover svg line {
+   stroke: var(--able-red) !important;
+}
+
+/* Botó de redimensionar el Vídeo de Signes POSICIÓ - NORMAL */
+.able-sign-window>.able-resizable {
+   right: 2px;
+}
+
+/* Botó de redimensionar el Vídeo de Signes COLOR - NORMAL */
+.able-sign-window .able-resizable svg line {
+   stroke: var(--able-white) !important;
+}
+
+/* Botó de redimensionar el Vídeo de Signes COLOR - HOVER */
+.able-sign-window .able-resizable:hover svg line {
+   stroke: var(--able-red) !important;
+}
+
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   MODALS DE TRANSCRIPCIÓ I LLENGUATGE DE SIGNES
+═════════════════════════════════════════════════════════════════════════════ */
+.able-transcript-area,
+.able-sign-window {
+   z-index: 2 !important;
+}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   MISSATGE ALERTA CANVIS
+═════════════════════════════════════════════════════════════════════════════ */
+
+.able-alert {
+   padding: 4px 12px;
+   font-size: 13px;
+   line-height: 16px;
+   color: var(--able-black);
+}
+
+.able-alert button {
+   padding: 2px;
+   font-size: revert;
+   line-height: 0;
+   border: none;
+   cursor: pointer;
+   color: var(--able-black);
+}
+
+.able-alert button:hover {
+   outline: none;
+}
+
+.able-alert button:focus-visible {
+   outline: revert !important;
+}
+
+.able-alert button .able-inline-svg {
+   width: 20px !important;
+   height: 20px !important;
+}
