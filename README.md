@@ -1,0 +1,218 @@
+# TOTHOM AblePlayer for Drupal
+
+Accessible HTML5 media player package based on Able Player, customized by TOTHOM.
+
+This package provides:
+- Able Player core build files
+- TOTHOM custom JS/CSS layer
+- Translation files (including `oc-aranes`)
+
+## Version
+- TOTHOM Edition: `v1.1.2`
+- Able Player base used for customization: `v4.7.0`
+
+## Installation
+
+```bash
+npm install tothom-ableplayer-drupal
+```
+
+## Required dependencies
+
+Include these dependencies in your page/app:
+- jQuery `3.7.1`
+- js-cookie `3.0.1`
+
+```bash
+npm install jquery@3.7.1
+npm install js-cookie@3.0.1
+```
+
+## File structure
+
+```text
+ableplayer/
+  build/
+    ableplayer.min.js
+    ableplayer.min.css
+  translations/
+    ca.json
+    es.json
+    ...
+custom-ableplayer/
+  custom-player.js
+  custom-player.css
+```
+
+## Basic standalone integration
+This is an example for a standalone integration using CDN files for dependencies.
+
+```html
+<head>
+  <!-- Dependencies -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+
+  <!-- Able Player core -->
+  <script src="./node_modules/tothom-ableplayer-drupal/ableplayer/build/ableplayer.min.js"></script>
+  <link rel="stylesheet" href="./node_modules/tothom-ableplayer-drupal/ableplayer/build/ableplayer.min.css" />
+
+  <!-- TOTHOM custom layer -->
+  <script src="./node_modules/tothom-ableplayer-drupal/custom-ableplayer/custom-player.js"></script>
+  <link rel="stylesheet" href="./node_modules/tothom-ableplayer-drupal/custom-ableplayer/custom-player.css" />
+</head>
+```
+
+## Drupal integration
+
+For Drupal projects, copy the package contents into `/web/libraries` and do the same for dependencies (`jquery` and `js-cookie`), so all required assets are available under `/web/libraries`.
+
+Then create a library in `YOUR_THEME.libraries.yml` that references those files from `/web/libraries`.
+
+Example:
+
+```yml
+tothom_ableplayer:
+  version: 1.x
+  css:
+    theme:
+      /libraries/tothom-ableplayer-drupal/ableplayer/build/ableplayer.min.css: {}
+      /libraries/tothom-ableplayer-drupal/custom-ableplayer/custom-player.css: {}
+  js:
+    /libraries/jquery/dist/jquery.min.js: {}
+    /libraries/js-cookie/dist/js.cookie.min.js: {}
+    /libraries/tothom-ableplayer-drupal/ableplayer/build/ableplayer.min.js: {}
+    /libraries/tothom-ableplayer-drupal/custom-ableplayer/custom-player.js: {}
+```
+
+Attach the library in Twig (for example, in a template where the player is rendered):
+
+```twig
+{{ attach_library('YOUR_THEME/ableplayer_tothom') }}
+```
+
+### Base player markup
+
+```html
+<video
+  id="video1"
+  data-able-player
+  data-skin="2020"
+  preload="metadata"
+  width="auto"
+  height="auto"
+  playsinline>
+</video>
+```
+
+Recommended responsive wrapper:
+
+```css
+.video-container {
+  width: 600px;
+  max-width: 100%;
+}
+```
+
+## Video source options
+
+- YouTube: `data-youtube-id="VIDEO_ID"`
+- Vimeo: `data-vimeo-id="VIDEO_ID"`
+- Local file:
+
+```html
+<source type="video/mp4" src="assets/example.mp4" />
+```
+
+## Tracks
+
+### Captions/Subtitles
+
+```html
+<track kind="subtitles" src="assets/subtitles_es.vtt" srclang="es" label="Español" />
+```
+
+`kind` can be:
+- `subtitles`
+- `captions`
+
+### Audio description
+
+- YouTube described version: `data-youtube-desc-id="VIDEO_ID"`
+- Vimeo described version: `data-vimeo-desc-id="VIDEO_ID"`
+- Local descriptions track:
+
+```html
+<track kind="descriptions" src="assets/descriptions_en.vtt" srclang="en" label="English" />
+```
+
+### Chapters
+
+```html
+<track kind="chapters" src="assets/chapters_en.vtt" srclang="en" label="Speakers" />
+```
+
+### Transcript
+
+Modal transcript: include captions/captions-like track.
+
+Fixed transcript:
+1. Add `data-transcript-div="transcript"` to `<video>`.
+2. Add the target container:
+
+```html
+<div class="transcript-container">
+  <section id="transcript" aria-label="Transcript"></section>
+</div>
+```
+
+## Player language
+
+By default, labels follow the page language (for example `<html lang="ca">`).
+
+To force a specific player language:
+
+```html
+<video data-lang="fr" ...>
+```
+
+## WebVTT quick format
+
+Time format:
+
+```text
+HH:MM:SS.mmm --> HH:MM:SS.mmm
+```
+
+Meaning:
+- `HH`: hours
+- `MM`: minutes
+- `SS`: seconds
+- `mmm`: milliseconds
+
+Minimal file:
+
+```text
+WEBVTT
+
+00:00:00.000 --> 00:00:05.000
+Welcome to the video.
+```
+
+## Language coverage
+
+Current TOTHOM custom layer is fully validated for:
+- Catalan (`ca`)
+- Aranese (`oc-aranes`)
+- Spanish (`es`)
+- English (`en`)
+
+## License
+
+- Able Player core files: MIT (see `ableplayer/LICENSE`)
+- TOTHOM custom layer: proprietary (see `custom-ableplayer/LICENSE`)
+
+## Source reference
+
+This README is adapted from the standalone implementation guide:
+- https://ableplayer.tothom.dev/pages/implementacio-hc.html
