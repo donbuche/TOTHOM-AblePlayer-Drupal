@@ -3,7 +3,7 @@
  ============================================================================ */
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   Colors - variables
+   COLORS - VARIABLES
 ═════════════════════════════════════════════════════════════════════════════ */
 
 :root {
@@ -48,7 +48,7 @@
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   Border radius - variables
+   BORDER RADIUS - VARIABLES
 ═════════════════════════════════════════════════════════════════════════════ */
 
 :root {
@@ -57,7 +57,7 @@
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   Font family
+   FONT FAMILY
 ═════════════════════════════════════════════════════════════════════════════ */
 
 .able-wrapper,
@@ -67,7 +67,7 @@
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   General
+   GENERAL
 ═════════════════════════════════════════════════════════════════════════════ */
 
 .able {
@@ -97,7 +97,7 @@
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   Media container (correction per centrar videos amb diferents aspect ratios)
+   MEDIA CONTAINER (FIX TO CENTER VIDEOS WITH DIFFERENT ASPECT RATIOS)
 ═════════════════════════════════════════════════════════════════════════════ */
 
 .able-media-container {
@@ -110,7 +110,7 @@
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   Big Play Button
+   BIG PLAY BUTTON
 ═════════════════════════════════════════════════════════════════════════════ */
 
 .able-big-play-button svg {
@@ -202,7 +202,7 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   Buttons
+   BUTTONS
 ═════════════════════════════════════════════════════════════════════════════ */
 
 .able-player div[role=button]:focus-visible {
@@ -490,7 +490,7 @@ div.able-captions-wrapper:not(.able-captions-overlay) {
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   PREFERÈNCES D'USUARI
+   USER PREFERENCES
 ═════════════════════════════════════════════════════════════════════════════ */
 
 .able-popup {
@@ -606,6 +606,7 @@ div.able-modal-dialog {
    grid-column: 2;
    justify-self: center;
 }
+
 .able-modal-header>.modalCloseButton {
    grid-column: 3;
    justify-self: end;
@@ -657,6 +658,7 @@ div.able-modal-dialog ul {
 .able-prefs-form ul {
    margin-bottom: 2em;
 }
+
 .able-prefs-descriptions .able-prefs-captions>div,
 .able-prefs-descriptions>div {
    gap: 0.5em;
@@ -973,7 +975,7 @@ div.able-modal-dialog input:focus,
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   MODALS DE TRANSCRIPCIÓ I LLENGUATGE DE SIGNES
+   TRANSCRIPT AND SIGN LANGUAGE MODALS
 ═════════════════════════════════════════════════════════════════════════════ */
 
 .able-transcript-area,
@@ -982,7 +984,7 @@ div.able-modal-dialog input:focus,
 }
 
 /* ═════════════════════════════════════════════════════════════════════════════
-   MISSATGE ALERTA CANVIS
+   CHANGE ALERT MESSAGE
 ═════════════════════════════════════════════════════════════════════════════ */
 
 .able-alert {

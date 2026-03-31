@@ -2,9 +2,9 @@
  ======================== CUSTOM SCRIPT FOR ABLE PLAYER ========================
  ============================================================================ */
 
-/* ═══════════════════════════════════════════════════════════════════════════
+/* ═════════════════════════════════════════════════════════════════════════════════════════════
    VOLUME SLIDER - DYNAMIC COLOR / CURSOR CANCELLATION AREA
-══════════════════════════════════════════════════════════════════════════════ */
+════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
   'use strict';
@@ -13,13 +13,10 @@
   var volumeSliderInitialized = false;
   var currentVolSlider = null;
   var currentVolStartVal = null;
-  var debugVolumeOverlay = false; // set true to enable visual marker
+  var debugVolumeOverlay = false; // Set true to enable visual marker
   var $volOverlay = null;
-  
-  
-  var tolX = 12;   // horizontal pixels
-  var tolY = 15;   // vertical pixels
-  
+  var tolX = 12; // Horizontal pixels
+  var tolY = 15; // Vertical pixels
   
   function updateVolumeSliderBackground($range) {
     if (!$range || $range.length === 0) return;
@@ -200,9 +197,9 @@
 
 })(jQuery);
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   MODIFICAR MIDA ICONA PLAY (SVG) - viewBox
-══════════════════════════════════════════════════════════════════════════════ */
+/* ═════════════════════════════════════════════════════════════════════════════════════════════
+   MODIFY PLAY ICON SIZE (SVG) - VIEWBOX
+════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function patchAblePlayerPlayViewBox() {
   function applyPatch() {
@@ -234,9 +231,9 @@
   else window.addEventListener('load', onReady);
 })();
 
-/* ═══════════════════════════════════════════════════════════════════════════
-    BOTÓ DE TANCAMENT DEL DIÀLEG ACCESSIBLE --> DE TEXT A SVG
-══════════════════════════════════════════════════════════════════════════════ */
+/* ═════════════════════════════════════════════════════════════════════════════════════════════
+    ACCESSIBLE DIALOG CLOSE BUTTON --> FROM TEXT TO SVG
+════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
   var OldAccessibleDialog = window.AccessibleDialog;
@@ -298,9 +295,9 @@
   }
 })(jQuery);
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   BOTÓ DE TANCAMENT DELS ABLE-ALERT --> DE TEXT A SVG
-══════════════════════════════════════════════════════════════════════════════ */
+/* ═════════════════════════════════════════════════════════════════════════════════════════════
+   ABLE-ALERT CLOSE BUTTON --> FROM TEXT TO SVG
+════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
 
@@ -389,7 +386,7 @@
     // Processar alerts existents
     processExistingAlerts();
 
-    // Configurar observer per nous alerts
+    // Configure observer for new alerts
     setupAlertObserver();
   });
 
@@ -403,9 +400,9 @@
   }
 })(jQuery);
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   MODIFICAR TEMPS DE DESAPARICIÓ DE L'ABLE-ALERT (30s → 5s)
-══════════════════════════════════════════════════════════════════════════════ */
+/* ═════════════════════════════════════════════════════════════════════════════════════════════
+   MODIFY ABLE-ALERT DISAPPEAR TIME (30S → 5S)
+════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
   function patchShowAlert() {
@@ -438,11 +435,10 @@
       if (location !== 'screenreader') {
         setTimeout(function () {
           $alertBox.fadeOut(300);
-        }, 5000); // 5 segons en lloc de 30
+        }, 5000); // 5 seconds instead of 30
       }
 
-      // FIX: Solucionar problema del role="alert" quan l'element es mou al DOM
-
+      // FIX: Solve role="alert" issue when the element is moved in the DOM
       $alertBox.removeAttr('role');
       setTimeout(function () {
         $alertBox.attr('role', 'alert');
@@ -465,28 +461,28 @@
   else window.addEventListener('load', onReady);
 })();
 
-/* ══════════════════════════════════════════════════════════════════════════════════════════════
-   TRADUCCIÓ DE TEXTOS ACCESSIBLESLIDER (HORES, MINUTS, SEGONS)
-═════════════════════════════════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+   ACCESSIBLESLIDER TEXT TRANSLATION (HOURS, MINUTES, SECONDS)
+═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
 
   var OldAccessibleSlider = window.AccessibleSlider;
 
   function CustomAccessibleSlider(mediaType, div, orientation, length, min, max, bigInterval, label, className, trackingMedia, initialState, tt) {
-    // Crida al constructor original
+    // Call the original constructor
     OldAccessibleSlider.call(this, mediaType, div, orientation, length, min, max, bigInterval, label, className, trackingMedia, initialState);
 
     this.tt = tt;
   }
 
-  // Estableix la cadena de prototipus
+  // Set up the prototype chain
   CustomAccessibleSlider.prototype = Object.create(OldAccessibleSlider.prototype);
   CustomAccessibleSlider.prototype.constructor = CustomAccessibleSlider;
 
   window.AccessibleSlider = CustomAccessibleSlider;
 
-  // Sobrescriptura d’addControls
+  // Override addControls
 
   var oldAddControls = AblePlayer.prototype.addControls;
   AblePlayer.prototype.addControls = function () {
@@ -498,7 +494,7 @@
     }
   };
 
-  // Sobrescriptura d’updateAriaValues
+  // Override updateAriaValues
 
   // The 'tt' translation table is now used (if undefined, default values are used)
   var oldUpdateAriaValues = AccessibleSlider.prototype.updateAriaValues;
@@ -550,9 +546,9 @@
 
 })(jQuery);
 
-/* ════════════════════════════════════════════════════════════════════════════════════════════════════════
-   ACTUALITZAR ATRIBUTS PER TAL QUE EL LECTOR DE PANTALLA LLEGEIXI ELS SUBTÍTOLS I TAMBÉ HI VAGI EL FOCUS
-═══════════════════════════════════════════════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+   UPDATE ATTRIBUTES SO THE SCREEN READER READS CAPTIONS AND FOCUS CAN MOVE THERE
+═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 (function ($) {
   AblePlayer.prototype.setupCaptions = function (track, cues) {
 
@@ -560,19 +556,19 @@
     var thisObj, captions, inserted, i, capLabel;
 
     // Insert track into captions array 
-    // in its proper alphabetical sequence by label  
+    // In its proper alphabetical sequence by label  
     if (typeof cues === 'undefined') {
       cues = null;
     }
 
     if (this.usingYouTubeCaptions || this.usingVimeoCaptions) {
-      // this.captions has already been populated 
+      // This.captions has already been populated 
       // For YouTube, this happens in youtube.js > getYouTubeCaptionTracks()
       // For Vimeo, this happens in vimeo.js > getVimeoCaptionTracks() 
       // So, nothing to do here... 
     }
     else {
-      if (this.captions.length === 0) { // this is the first	
+      if (this.captions.length === 0) { // This is the first	
         this.captions.push({
           'language': track.language,
           'label': track.label,
@@ -581,13 +577,13 @@
           'cues': cues
         });
       }
-      else { // there are already captions in the array			
+      else { // There are already captions in the array			
         inserted = false;
         for (i = 0; i < this.captions.length; i++) {
           capLabel = track.label;
           
           if (capLabel.toLowerCase() < this.captions[i].label.toLowerCase()) {
-            // insert before track i
+            // Insert before track i
             this.captions.splice(i, 0, {
               'language': track.language,
               'label': track.label,
@@ -600,7 +596,7 @@
           }
         }
         if (!inserted) {
-          // just add track to the end
+          // Just add track to the end
           this.captions.push({
             'language': track.language,
             'label': track.label,
@@ -612,7 +608,7 @@
       }
     }
 
-    // there are captions available 
+    // There are captions available 
     this.hasCaptions = true;
     this.currentCaption = -1;
     if (this.prefCaptions === 1) {
@@ -622,7 +618,7 @@
       this.captionsOn = false;
     } 
     else {
-      // user has no prefs. Use default state.
+      // User has no prefs. Use default state.
       if (this.defaultStateCaptions === 1) {
         this.captionsOn = true;
       } 
@@ -636,7 +632,7 @@
 
     if (!this.$captionsWrapper ||
       (this.$captionsWrapper && !($.contains(this.$ableDiv[0], this.$captionsWrapper[0])))) {
-      // captionsWrapper either doesn't exist, or exists in an orphaned state 
+      // CaptionsWrapper either doesn't exist, or exists in an orphaned state 
       // Either way, it needs to be rebuilt...  
       this.$captionsDiv = $('<div>', {
         'class': 'able-captions',
@@ -663,9 +659,9 @@
 
 })(jQuery);
 
-/* ═══════════════════════════════════════════════════════════════════════════════════════════════════════════
-   ACTUALITZA L'ATRIBUT LANG SEGONS L'IDIOMA SELECCIONAT A TOT EL CONTENIDOR DEL CAPTIONS I AL DIV DEL CAPTIONS
-══════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
+/* ═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+   UPDATE THE LANG ATTRIBUTE ACCORDING TO THE SELECTED LANGUAGE ON BOTH CAPTIONS CONTAINER AND CAPTIONS DIV
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
   AblePlayer.prototype.showCaptions = function (now) {
@@ -689,7 +685,7 @@
     }
     if (typeof thisCaption !== 'undefined') {
       if (this.currentCaption !== thisCaption) {
-        // it's time to load the new caption into the container div
+        // It's time to load the new caption into the container div
         captionText = this.flattenCueForCaption(cues[thisCaption]).replace('\n', '<br>');
         this.$captionsDiv.html(captionText);
 
@@ -703,7 +699,7 @@
 
         this.currentCaption = thisCaption;
         if (captionText.length === 0) {
-          // hide captionsDiv; otherwise background-color is visible due to padding
+          // Hide captionsDiv; otherwise background-color is visible due to padding
           this.$captionsDiv.css('display', 'none');
         }
         else {
@@ -719,35 +715,30 @@
 
 })(jQuery);
 
-/* ═══════════════════════════════════════════════════════════════════════════════════════════════════════════
-   Afegir l'idioma ARANÈS (oc-aranes) a la llista d'idiomes suportats
-══════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
+/* ═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
+   ADD ARANESE LANGUAGE (OC-ARANES) TO THE LIST OF SUPPORTED LANGUAGES
+════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
-
   AblePlayer.prototype.getSupportedLangs = function () {
-    // returns an array of languages for which AblePlayer has translation tables        
+    // Returns an array of languages for which AblePlayer has translation tables        
     var langs = ['ca', 'cs', 'da', 'de', 'en', 'es', 'fr', 'he', 'id', 'it', 'ja', 'ms', 'nb', 'nl', 'oc-aranes', 'pl', 'pt', 'pt-br', 'sv', 'tr', 'zh-tw'];
     return langs;
   };
-
-
 })(jQuery);
 
 (function ($) {
-
   var isoLangs = {
     "oc-aranes": {
       "name": "Aranese",
-      "nativeName": "Aranés"
+      "nativeName": "Aranese"
     },
   }
-  
 })(jQuery);
 
-/* ══════════════════════════════════════════════════════════════════════
-  Redimensionar àrea de transcripció i marge inferior intern
-═══════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════════════════
+  RESIZE TRANSCRIPT AREA AND INNER BOTTOM MARGIN
+═════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function () {
   var origResizeObject = AblePlayer.prototype.resizeObject;
@@ -758,7 +749,7 @@
 
     if (which === 'transcript') {
       var toolbarHeight = this.$transcriptArea ? (this.$transcriptArea.find('.able-window-toolbar').outerHeight(true) || 0) : 0;
-      var paddingAndBorder = 16; // marge de seguretat mínim
+      var paddingAndBorder = 16; // Minimum safety margin
 
       var chromeHeight = toolbarHeight + paddingAndBorder;
       var innerHeight = Math.max(0, height - chromeHeight);
@@ -781,9 +772,9 @@
   };
 })();
 
-/* ══════════════════════════════════════════════════════════════════════
-   Evitar que el botó de redimensionar la transcripció quedi "enganxat"
-═══════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════════════════
+   PREVENT THE TRANSCRIPT RESIZE BUTTON FROM GETTING "STUCK"
+═════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function () {
   var origStartResize = AblePlayer.prototype.startResize;
@@ -803,9 +794,9 @@
   };
 })();
 
-/* ══════════════════════════════════════════════════════════════════════
-    Treure opcions del menú de preferències si no hi ha els tracks corresponents
- ═══════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════════════════
+    REMOVE OPTIONS FROM THE PREFERENCES MENU WHEN REGARDING TRACKS DO NOT EXIST
+ ═════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
 
@@ -873,10 +864,10 @@
           (this.transcriptType && this.transcriptType !== 'external') ||
           (this.transcriptDiv || this.$media.attr('data-transcript-div'));
       },
-      'keyboard': function () { return true; } // Sempre incloure
+      'keyboard': function () { return true; } // Always include
     };
 
-    // Mapeig de textos i dialogs
+    // Mapping of texts and dialogs
     var prefConfig = {
       'captions': {
         text: this.tt.prefMenuCaptions,
@@ -936,15 +927,15 @@
 
 })(jQuery);
 
-/* ══════════════════════════════════════════════════════════════════════
-   Nova opció "About" al menú de preferències
-═══════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════════════════
+   NEW "ABOUT" OPTION IN THE PREFERENCES MENU
+═════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
   'use strict';
   if (typeof AblePlayer === 'undefined') return;
 
-  const buildType = 'web'; // Opcions: 'web', 'wp'
+  const buildType = 'web'; // Options: 'web', 'wp'
   const productVersions = {
     web: { nameKey: 'productNameWeb', descKey: 'webEditionDescription' },
     wp: { nameKey: 'productNameWp', descKey: 'wpEditionDescription' }
@@ -954,7 +945,7 @@
   const ENGINE_VERSION = 'Able Player v4.7.0';
   const CURRENT_YEAR = new Date().getFullYear();
 
-  // Helper de traduccions
+  // Translation helper
   function t(player, key, fb) {
     return (player.tt && player.tt[key]) ? player.tt[key] : (fb || key);
   }
@@ -1042,9 +1033,9 @@
 
 })(jQuery);
 
-/* ══════════════════════════════════════════════════════════════════════
-   Augmentar l'ample inicial de les finestres arrossegables (transcripció i signes)
-═══════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════════════════
+   INCREASE INITIAL WIDTH OF DRAGGABLE WINDOWS (TRANSCRIPT AND SIGN)
+═════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function () {
   AblePlayer.prototype.getDefaultWidth = function (which) {
@@ -1058,9 +1049,9 @@
   };
 })();
 
-/* ══════════════════════════════════════════════════════════════════════
-   Aplicar gap vertical quan la finestra de signes o transcripció està a sota del vídeo
-═══════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════════════════
+   APPLY VERTICAL GAP WHEN THE SIGN OR TRANSCRIPT WINDOW IS BELOW THE VIDEO
+═════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
   'use strict';
@@ -1103,14 +1094,14 @@
 
 })(jQuery);
 
-/* ══════════════════════════════════════════════════════════════════════
-   Subtítols: separar toggle i selector d'idioma (criteri 7.3) i millores
-   - Button nou de CC toggle; el botó CC original passa a ser selector d'idioma/AD
-   - Menú d'idioma accessible (tab/tecles, focus mòbil, grups Captions/AD)
-   - Reordena botons (toggle, AD, LS, transcript, idioma, capítols)
-   - Tria pista per defecte (prioritza captions def) i posa icona de llengua
-   - Ajusta etiquetes d'audio-descripció i afegeix tooltip coherent
-═══════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════════════════
+   CAPTIONS: SPLIT TOGGLE AND LANGUAGE SELECTOR (CRITERION 7.3) AND IMPROVEMENTS
+   - New CC toggle button; original CC button becomes language/AD selector
+   - Accessible language menu (tab/keys, mobile focus, Captions/AD groups)
+   - Reorder buttons (toggle, AD, sign language, transcript, language, chapters)
+   - Choose default track (prioritize default captions) and set language icon
+   - Adjust audio-description labels and add a consistent tooltip
+═════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
   if (!window.AblePlayer) return;
@@ -1148,7 +1139,7 @@
 
   function getOpenDescTrackFromCaptions(player) {
     if (!hasOpenDescription(player)) return null;
-    if (player.descriptions && player.descriptions.length) return null; // ja hi ha AD tancada
+    if (player.descriptions && player.descriptions.length) return null; // Closed AD already exists
 
     var cap = null;
     if (player.selectedCaptions) {
@@ -1447,7 +1438,7 @@
       }
     }
 
-    // Reordenar amb l'ordre requerit:
+    // Reorder using the required order:
     var $rightContainer = this.$controllerDiv.find('.able-right-controls');
     if (!$rightContainer.length) $rightContainer = this.$controllerDiv;
     var $pipe = $rightContainer.find('.able-pipe').first();
@@ -1464,12 +1455,12 @@
 
     insertBeforePipe(this.$ccToggleButton); // 1
     insertBeforePipe($rightContainer.find('.able-button-handler-descriptions').first()); // 2
-    insertBeforePipe($rightContainer.find('.able-button-handler-sign').first());         // 3
-    insertBeforePipe($rightContainer.find('.able-button-handler-transcript').first());   // 4
-    insertBeforePipe(this.$ccLanguageButton);                                            // 5
-    insertBeforePipe($rightContainer.find('.able-button-handler-chapters').first());     // 6
+    insertBeforePipe($rightContainer.find('.able-button-handler-sign').first()); // 3
+    insertBeforePipe($rightContainer.find('.able-button-handler-transcript').first()); // 4
+    insertBeforePipe(this.$ccLanguageButton); // 5
+    insertBeforePipe($rightContainer.find('.able-button-handler-chapters').first()); // 6
 
-    // Assegurar estat inicial coherent
+    // Ensure consistent initial state
     this.refreshControls('captions');
   };
 
@@ -1609,7 +1600,7 @@
     return _onClick.apply(this, arguments);
   };
 
-  // and refresh controls (buttons, status, etc.).
+  // And refresh controls (buttons, status, etc.).
   AblePlayer.prototype.refreshControls = function (context, duration, elapsed) {
     _refresh.apply(this, arguments);
 
@@ -1641,8 +1632,8 @@
       this.toggleButtonState(
         this.$ccToggleButton,
         this.captionsOn,
-        this.tt ? this.tt.hideCaptions : 'Amaga subtítols',
-        this.tt ? this.tt.showCaptions : 'Mostra subtítols',
+        this.tt ? this.tt.hideCaptions : 'Hide captions',
+        this.tt ? this.tt.showCaptions : 'Show captions',
         false,
         false
       );
@@ -1715,9 +1706,9 @@
 
 })(jQuery);
 
-/* ══════════════════════════════════════════════════════════════════════
-   Desacoblar idiomes de subtítols i AD (evitar sync automàtic)
-═══════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════════════════
+   DECOUPLE CAPTION AND AD LANGUAGES (AVOID AUTOMATIC SYNC)
+═════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
   if (!window.AblePlayer) return;
@@ -1771,9 +1762,9 @@
   };
 })(jQuery);
 
-/* ══════════════════════════════════════════════════════════════════════
-   Veu sintètica d’AD en l’idioma de la pista d’AD (no del web/CC)
-═══════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════════════════════════════════
+   AD SYNTHETIC VOICE IN THE AD TRACK LANGUAGE (NOT WEBSITE/CC LANGUAGE)
+═════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
   if (!window.AblePlayer) return;
@@ -1817,10 +1808,10 @@
   };
 })(jQuery);
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   YouTube captions: Timeout de 500ms per resoldre la promesa i evitar que el
-   player perdi controls quan YouTube no retorna pistes de captions   
-══════════════════════════════════════════════════════════════════════════════ */
+/* ═════════════════════════════════════════════════════════════════════════════════════════════
+   YOUTUBE CAPTIONS: 500MS TIMEOUT TO RESOLVE THE PROMISE AND AVOID LOSING
+   player controls when YouTube does not return caption tracks
+════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
   if (!window.AblePlayer || !AblePlayer.prototype.getYouTubeCaptionTracks) return;
@@ -1831,24 +1822,24 @@
     var thisObj = this;
     var originalPromise = origGetYouTubeCaptionTracks.apply(this, arguments);
 
-    // Envoltem amb un timeout perquè la promesa es resolgui sempre
+    // Wrap with a timeout so the promise always resolves
     var timeoutMs = 500;
     var d = $.Deferred();
     if (!thisObj.okToPlay && thisObj.youTubePlayer && typeof thisObj.youTubePlayer.pauseVideo === 'function') {
       setTimeout(function () {
         if (thisObj.loadingYouTubeCaptions) {
-          thisObj.youTubePlayer.pauseVideo(); // Seguretat addicional: atura ràpid si segueix carregant
+          thisObj.youTubePlayer.pauseVideo(); // Extra safety: stop quickly if still loading
         }
       }, 200);
     }
     var timer = setTimeout(function () {
-      // Si no hi ha captions, forcem valors segurs perquè el player continuï
+      // If there are no captions, force safe values so the player can continue
       thisObj.youtubeCaptions = thisObj.youtubeCaptions || [];
       thisObj.usingYouTubeCaptions = !!(thisObj.youtubeCaptions.length);
       thisObj.hasCaptions = thisObj.usingYouTubeCaptions;
       thisObj.loadingYouTubeCaptions = false;
       if (!thisObj.okToPlay && thisObj.youTubePlayer && typeof thisObj.youTubePlayer.pauseVideo === 'function') {
-        thisObj.youTubePlayer.pauseVideo(); // Evita reproducció automàtica si YouTube no retorna pistes
+        thisObj.youTubePlayer.pauseVideo(); // Prevent autoplay if YouTube does not return tracks
       }
       d.resolve(thisObj.youtubeCaptions);
     }, timeoutMs);
@@ -1872,9 +1863,9 @@
   };
 })(jQuery);
 
-/* ═══════════════════════════════════════════════════════════════════════════
-   ARIA-LABEL DEL ROLE="REGION" DEL REPRODUCTOR, TANT EN ÀUDIO COM EN VÍDEO
-══════════════════════════════════════════════════════════════════════════════ */
+/* ═════════════════════════════════════════════════════════════════════════════════════════════
+   PLAYER ROLE="REGION" ARIA-LABEL, BOTH FOR AUDIO AND VIDEO
+════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function patchPlayerRegionAriaLabel() {
   function getPlayerRegionLabel(playerInstance) {
