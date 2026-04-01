@@ -293,3 +293,8 @@ This is the list of supported languages:
 
 - Able Player core files: MIT (see `ableplayer/LICENSE`)
 - TOTHOM custom layer: proprietary (see `custom-ableplayer/LICENSE`)
+
+## Package authorship
+
+- Author (standalone and Wordpress version): [Aleix Martín](https://github.com/amartincua)
+- Contributor (Drupal version): [Joan Galtés i Moreno](https://github.com/joan-galtes)
