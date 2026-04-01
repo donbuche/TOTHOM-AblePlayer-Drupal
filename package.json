@@ -2,8 +2,6 @@
   "name": "tothom-ableplayer-drupal",
   "version": "1.1.2",
   "description": "TOTHOM Able Player for Drupal with accessibility improvements, UI refinements, and extended language support.",
-  "main": "custom-ableplayer/custom-player.min.js",
-  "style": "custom-ableplayer/custom-player.min.css",
   "keywords": [
     "ableplayer",
     "accessible-media-player",
