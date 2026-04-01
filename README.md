@@ -231,9 +231,9 @@ Welcome to the video.
 
 ## Language coverage
 
-The custom layer currently supports the same language set declared in `custom-ableplayer/custom-player.js` and shipped as JSON files in `/translations`.
+The number of supported languages at this moment is 54 languages. The custom layer currently supports the same language set declared in `custom-ableplayer/custom-player.js` and shipped as JSON files in `/translations`.
 
-Supported language codes:
+This is the list of supported languages:
 - `ab` Abkhazian
 - `am` Amharic
 - `ar` Arabic
@@ -254,8 +254,10 @@ Supported language codes:
 - `gl` Galician
 - `gn` Guarani
 - `gu` Gujarati
+- `he` Hebrew
 - `hr` Croatian
 - `hu` Hungarian
+- `id` Indonesian
 - `it` Italian
 - `iu` Inuktitut
 - `ja` Japanese
@@ -263,6 +265,7 @@ Supported language codes:
 - `kn` Kannada
 - `kv` Komi
 - `mi` Maori
+- `ms` Malay
 - `nb` Norwegian Bokmal
 - `nl` Dutch
 - `nn` Norwegian Nynorsk
@@ -271,6 +274,7 @@ Supported language codes:
 - `oc-aranes` Aranese
 - `pl` Polish
 - `pt` Portuguese
+- `pt-br` Portuguese (Brazil)
 - `ro` Romanian
 - `ru` Russian
 - `sk` Slovak
@@ -279,9 +283,11 @@ Supported language codes:
 - `sv` Swedish
 - `te` Telugu
 - `ti` Tigrinya
+- `tr` Turkish
 - `uk` Ukrainian
 - `yi` Yiddish
-- `zh` Chinese
+- `zh` Chinese (Simplified)
+- `zh-tw` Chinese (Traditional, Taiwan)
 
 ## License
 

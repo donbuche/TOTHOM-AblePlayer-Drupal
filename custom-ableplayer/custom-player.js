@@ -862,19 +862,19 @@
 })(jQuery);
 
 /* ═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-   ADD ARANESE LANGUAGE (OC-ARANES) TO THE LIST OF SUPPORTED LANGUAGES
+   EXTEND THE LIST OF SUPPORTED LANGUAGES TO MATCH THE CUSTOM /translations FOLDER
 ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
   /**
    * Returns the list of translation codes supported by this customized Able Player
-   * build, including the extra `oc-aranes` language.
+   * build, matching the translation JSON files bundled in `/translations`.
    *
    * @returns {string[]} Array of language codes supported by the player.
    */
   AblePlayer.prototype.getSupportedLangs = function () {
     // Returns an array of languages for which AblePlayer has translation tables        
-    var langs = ['ab', 'am', 'ar', 'as', 'bh', 'bg', 'ca', 'cs', 'cu', 'da', 'de', 'dv', 'el', 'en', 'es', 'eu', 'fr', 'gl', 'gn', 'gu', 'hr', 'hu', 'it', 'iu', 'ja', 'km', 'kn', 'kv', 'mi', 'nb', 'nl', 'nn', 'no', 'oc', 'oc-aranes', 'pl', 'pt', 'ro', 'ru', 'sk', 'sl', 'sr', 'sv', 'te', 'ti', 'uk', 'yi', 'zh'];
+    var langs = ['ab', 'am', 'ar', 'as', 'bh', 'bg', 'ca', 'cs', 'cu', 'da', 'de', 'dv', 'el', 'en', 'es', 'eu', 'fr', 'gl', 'gn', 'gu', 'he', 'hr', 'hu', 'id', 'it', 'iu', 'ja', 'km', 'kn', 'kv', 'mi', 'ms', 'nb', 'nl', 'nn', 'no', 'oc', 'oc-aranes', 'pl', 'pt', 'pt-br', 'ro', 'ru', 'sk', 'sl', 'sr', 'sv', 'te', 'ti', 'tr', 'uk', 'yi', 'zh', 'zh-tw'];
     return langs;
   };
 })(jQuery);
