@@ -28,7 +28,7 @@ Because of that, using the package directly from `node_modules` is not a support
 ## Required dependencies
 
 Include these dependencies in your page/app:
-- jQuery `3.7.1`
+- jQuery `3.7.1` (**Important!** Only if it is not already provided by Drupal core)
 - js-cookie `3.0.1`
 
 ```bash
@@ -41,7 +41,9 @@ npm install js-cookie@3.0.1
 ```text
 ableplayer/
   build/
+    ableplayer.js
     ableplayer.min.js
+    ableplayer.css
     ableplayer.min.css
   translations/
     ca.json
@@ -64,8 +66,8 @@ Important: this only shows how to load the JS and CSS files in isolation. The cu
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
 
   <!-- Able Player core -->
-  <script src="./node_modules/tothom-ableplayer-drupal/ableplayer/build/ableplayer.min.js"></script>
-  <link rel="stylesheet" href="./node_modules/tothom-ableplayer-drupal/ableplayer/build/ableplayer.min.css" />
+  <script src="./node_modules/tothom-ableplayer-drupal/ableplayer/build/ableplayer.js"></script>
+  <link rel="stylesheet" href="./node_modules/tothom-ableplayer-drupal/ableplayer/build/ableplayer.css" />
 
   <!-- TOTHOM custom layer -->
   <script src="./node_modules/tothom-ableplayer-drupal/custom-ableplayer/custom-player.js"></script>
@@ -81,26 +83,27 @@ This is the supported deployment model for this package. The custom translation 
 
 Then create a library in `YOUR_THEME.libraries.yml` that references those files from `/web/libraries`.
 
-Example:
+Example (assuming jQuery is provided by your Drupal core):
 
 ```yml
 tothom_ableplayer:
   version: 1.x
   css:
     theme:
-      /libraries/tothom-ableplayer-drupal/ableplayer/build/ableplayer.min.css: {}
+      /libraries/tothom-ableplayer-drupal/ableplayer/build/ableplayer.css: {}
       /libraries/tothom-ableplayer-drupal/custom-ableplayer/custom-player.css: {}
   js:
-    /libraries/jquery/dist/jquery.min.js: {}
-    /libraries/js-cookie/dist/js.cookie.min.js: {}
-    /libraries/tothom-ableplayer-drupal/ableplayer/build/ableplayer.min.js: {}
+    /libraries/js-cookie/dist/js.cookie.js: {}
+    /libraries/tothom-ableplayer-drupal/ableplayer/build/ableplayer.js: {}
     /libraries/tothom-ableplayer-drupal/custom-ableplayer/custom-player.js: {}
+  dependencies:
+    - core/jquery
 ```
 
 Attach the library in Twig (for example, in a template where the player is rendered):
 
 ```twig
-{{ attach_library('YOUR_THEME/ableplayer_tothom') }}
+{{ attach_library('YOUR_THEME/tothom_ableplayer') }}
 ```
 
 ### Translation paths
@@ -228,9 +231,9 @@ Welcome to the video.
 
 ## Language coverage
 
-The custom layer currently supports the same language set declared in `custom-ableplayer/custom-player.js` and shipped as JSON files in `/translations`.
+The number of supported languages at this moment is 54 languages. The custom layer currently supports the same language set declared in `custom-ableplayer/custom-player.js` and shipped as JSON files in `/translations`.
 
-Supported language codes:
+This is the list of supported languages:
 - `ab` Abkhazian
 - `am` Amharic
 - `ar` Arabic
@@ -251,8 +254,10 @@ Supported language codes:
 - `gl` Galician
 - `gn` Guarani
 - `gu` Gujarati
+- `he` Hebrew
 - `hr` Croatian
 - `hu` Hungarian
+- `id` Indonesian
 - `it` Italian
 - `iu` Inuktitut
 - `ja` Japanese
@@ -260,6 +265,7 @@ Supported language codes:
 - `kn` Kannada
 - `kv` Komi
 - `mi` Maori
+- `ms` Malay
 - `nb` Norwegian Bokmal
 - `nl` Dutch
 - `nn` Norwegian Nynorsk
@@ -268,6 +274,7 @@ Supported language codes:
 - `oc-aranes` Aranese
 - `pl` Polish
 - `pt` Portuguese
+- `pt-br` Portuguese (Brazil)
 - `ro` Romanian
 - `ru` Russian
 - `sk` Slovak
@@ -276,9 +283,11 @@ Supported language codes:
 - `sv` Swedish
 - `te` Telugu
 - `ti` Tigrinya
+- `tr` Turkish
 - `uk` Ukrainian
 - `yi` Yiddish
-- `zh` Chinese
+- `zh` Chinese (Simplified)
+- `zh-tw` Chinese (Traditional, Taiwan)
 
 ## License
 
