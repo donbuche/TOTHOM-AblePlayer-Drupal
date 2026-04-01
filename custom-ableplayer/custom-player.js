@@ -18,6 +18,14 @@
   var tolX = 12; // Horizontal pixels
   var tolY = 15; // Vertical pixels
   
+  /**
+   * Repaints a volume range input with a filled/unfilled gradient that reflects
+   * the current value and compensates for Firefox's vertical slider rendering.
+   *
+   * @param {jQuery} $range - jQuery-wrapped `<input type="range">` element that
+   *   belongs to Able Player's volume control.
+   * @returns {void}
+   */
   function updateVolumeSliderBackground($range) {
     if (!$range || $range.length === 0) return;
 
@@ -55,7 +63,12 @@
     }
   }
 
-  // Initialize all volume sliders
+  /**
+   * Normalizes every existing Able Player volume slider by ensuring min/max/value
+   * defaults are present and then applying the custom background styling.
+   *
+   * @returns {void}
+   */
   function initializeVolumeSliders() {
     $('.able-volume-slider input[type=range]').each(function () {
       var $slider = $(this);
@@ -71,6 +84,12 @@
     volumeSliderInitialized = true;
   }
 
+  /**
+   * Watches the DOM for sliders injected after initial page load and reruns the
+   * slider initialization routine once those controls exist in the document.
+   *
+   * @returns {void}
+   */
   function detectNewVolumeSliders() {
     var observer = new MutationObserver(function (mutations) {
       var shouldUpdate = false;
@@ -103,6 +122,12 @@
     });
   }
 
+  /**
+   * Binds drag lifecycle handlers for the custom volume slider behavior so a
+   * release outside the tolerated area restores the value that existed at drag start.
+   *
+   * @returns {void}
+   */
   function setupVolumeSliderEvents() {
     // Remove previous events
     $(document).off('mousedown.ableVolDrag mouseup.ableVolDrag');
@@ -146,7 +171,13 @@
     });
   }
 
-  // Show debug overlay
+  /**
+   * Draws a temporary visual box around the slider and its forgiveness area to
+   * help debug pointer hit testing for drag cancellation.
+   *
+   * @param {HTMLInputElement} slider - Native range input currently being dragged.
+   * @returns {void}
+   */
   function showDebugOverlay(slider) {
     if (!debugVolumeOverlay) return;
 
@@ -202,6 +233,13 @@
 ════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function patchAblePlayerPlayViewBox() {
+  /**
+   * Wraps Able Player's icon lookup so only the play icon receives a custom
+   * `viewBox`, allowing the SVG to render at the desired visual scale.
+   *
+   * @returns {boolean} `true` when the patch was applied, `false` when Able Player
+   *   is not ready yet.
+   */
   function applyPatch() {
     if (!window.AblePlayer || !AblePlayer.prototype || !AblePlayer.prototype.getIconData) {
       return false;
@@ -209,7 +247,13 @@
 
     var origGetIconData = AblePlayer.prototype.getIconData;
 
-    // Replace with a wrapper
+    /**
+     * Returns Able Player SVG metadata while overriding the play icon `viewBox`.
+     *
+     * @param {string} button - Able Player icon identifier being requested.
+     * @returns {Array|string|*} The original icon payload, with the play icon
+     *   cloned and adjusted when applicable.
+     */
     AblePlayer.prototype.getIconData = function (button) {
       var svg = origGetIconData.call(this, button);
 
@@ -226,6 +270,12 @@
   // Try applying patch immediately
   if (applyPatch()) return;
 
+  /**
+   * Retries the play-icon patch once the page load lifecycle guarantees that
+   * Able Player has already registered its prototype methods.
+   *
+   * @returns {void}
+   */
   var onReady = function () { applyPatch(); };
   if (document.readyState === 'complete') onReady();
   else window.addEventListener('load', onReady);
@@ -238,6 +288,13 @@
 (function ($) {
   var OldAccessibleDialog = window.AccessibleDialog;
 
+  /**
+   * Replaces AccessibleDialog's textual close button with an SVG icon while
+   * preserving the accessible name exposed to assistive technologies.
+   *
+   * @constructor
+   * @returns {void}
+   */
   function NewAccessibleDialog() {
     OldAccessibleDialog.apply(this, arguments);
 
@@ -301,6 +358,13 @@
 
 (function ($) {
 
+  /**
+   * Swaps the dismiss button inside an Able Player alert for an SVG-based close
+   * control and keeps a screen-reader-friendly label when no `aria-label` exists.
+   *
+   * @param {jQuery} $alert - jQuery-wrapped alert container to enhance.
+   * @returns {void}
+   */
   function replaceAlertCloseButton($alert) {
     if (!$alert || !$alert.length) return;
 
@@ -345,12 +409,24 @@
     }
   }
 
+  /**
+   * Enhances every alert already present in the DOM so all dismiss buttons use
+   * the same SVG treatment.
+   *
+   * @returns {void}
+   */
   function processExistingAlerts() {
     $('.able-alert').each(function () {
       replaceAlertCloseButton($(this));
     });
   }
 
+  /**
+   * Starts observing the page for dynamically created `.able-alert` elements and
+   * schedules close-button replacement after they are inserted.
+   *
+   * @returns {void}
+   */
   function setupAlertObserver() {
     var observer = new MutationObserver(function (mutations) {
       var shouldProcess = false;
@@ -405,6 +481,14 @@
 ════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
+  /**
+   * Overrides Able Player's alert renderer so non-screen-reader alerts disappear
+   * after five seconds and keep the `role="alert"` announcement working after
+   * the node is moved in the DOM.
+   *
+   * @returns {boolean} `true` when the override was installed, `false` when the
+   *   original method is not available yet.
+   */
   function patchShowAlert() {
     if (!window.AblePlayer || !AblePlayer.prototype.showAlert) {
       return false;
@@ -412,6 +496,15 @@
 
     var originalShowAlert = AblePlayer.prototype.showAlert;
 
+    /**
+     * Displays an Able Player alert in the requested container using a shortened
+     * timeout and re-applies the alert role to keep announcements reliable.
+     *
+     * @param {string} msg - Text content to inject into the alert box.
+     * @param {string} [location='main'] - Target alert region: the main player,
+     *   transcript, sign window, or screen-reader-only container.
+     * @returns {void}
+     */
     AblePlayer.prototype.showAlert = function (msg, location = 'main') {
 
       var thisObj, $alertBox, $parentWindow;
@@ -451,6 +544,12 @@
 
   if (patchShowAlert()) return;
 
+  /**
+   * Attempts to apply the alert patch after window load and schedules one extra
+   * retry if Able Player is still initializing.
+   *
+   * @returns {void}
+   */
   var onReady = function () {
     if (!patchShowAlert()) {
       setTimeout(patchShowAlert, 100);
@@ -469,6 +568,25 @@
 
   var OldAccessibleSlider = window.AccessibleSlider;
 
+  /**
+   * Extends Able Player's slider constructor so the instance keeps a translation
+   * table that can later be used to verbalize time values in the active language.
+   *
+   * @constructor
+   * @param {string} mediaType - Media type associated with the slider.
+   * @param {HTMLElement|jQuery} div - Slider container element.
+   * @param {string} orientation - Slider orientation expected by Able Player.
+   * @param {number} length - Visual length of the control.
+   * @param {number} min - Minimum slider value.
+   * @param {number} max - Maximum slider value.
+   * @param {number} bigInterval - Step size used for larger keyboard jumps.
+   * @param {string} label - Accessible label for the slider.
+   * @param {string} className - CSS class Able Player assigns to the control.
+   * @param {boolean} trackingMedia - Whether the slider tracks live media position.
+   * @param {number} initialState - Initial slider position.
+   * @param {Object} tt - Translation table containing localized time unit labels.
+   * @returns {void}
+   */
   function CustomAccessibleSlider(mediaType, div, orientation, length, min, max, bigInterval, label, className, trackingMedia, initialState, tt) {
     // Call the original constructor
     OldAccessibleSlider.call(this, mediaType, div, orientation, length, min, max, bigInterval, label, className, trackingMedia, initialState);
@@ -483,10 +601,16 @@
   window.AccessibleSlider = CustomAccessibleSlider;
 
   // Override addControls
-
   var oldAddControls = AblePlayer.prototype.addControls;
+  
+  /**
+   * Calls Able Player's original control builder and copies the player's
+   * translation table into the seek bar so slider announcements can localize
+   * hours, minutes, and seconds.
+   *
+   * @returns {void}
+   */
   AblePlayer.prototype.addControls = function () {
-
     oldAddControls.apply(this, arguments);
 
     if (this.skin === '2020' && this.seekBar) {
@@ -494,10 +618,18 @@
     }
   };
 
-  // Override updateAriaValues
-
   // The 'tt' translation table is now used (if undefined, default values are used)
   var oldUpdateAriaValues = AccessibleSlider.prototype.updateAriaValues;
+  
+  /**
+   * Updates the seek head ARIA attributes and live region with a localized,
+   * human-readable description of the current slider position.
+   *
+   * @param {number} position - Slider value in seconds.
+   * @param {boolean} updateLive - Whether to also announce the value through the
+   *   polite live region.
+   * @returns {void}
+   */
   AccessibleSlider.prototype.updateAriaValues = function (position, updateLive) {
     // Use this.tt if it exists, or create a default object
     var tt = this.tt || {
@@ -550,8 +682,15 @@
    UPDATE ATTRIBUTES SO THE SCREEN READER READS CAPTIONS AND FOCUS CAN MOVE THERE
 ═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 (function ($) {
+  /**
+   * Registers a captions track in Able Player and ensures the captions wrapper is
+   * rebuilt with focusable, live-region-friendly markup when needed.
+   *
+   * @param {Object} track - Caption/subtitle track metadata from Able Player.
+   * @param {Array<Object>|null|undefined} cues - Parsed cue list for the track.
+   * @returns {void}
+   */
   AblePlayer.prototype.setupCaptions = function (track, cues) {
-
     // Setup player for display of captions (one track at a time)
     var thisObj, captions, inserted, i, capLabel;
 
@@ -664,6 +803,13 @@
 ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
+  /**
+   * Renders the caption active at the current playback time and synchronizes the
+   * `lang` attribute on both the caption text node and its wrapper.
+   *
+   * @param {number} now - Current playback time in seconds.
+   * @returns {void}
+   */
   AblePlayer.prototype.showCaptions = function (now) {
 
     var c, thisCaption, captionText;
@@ -720,6 +866,12 @@
 ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function ($) {
+  /**
+   * Returns the list of translation codes supported by this customized Able Player
+   * build, including the extra `oc-aranes` language.
+   *
+   * @returns {string[]} Array of language codes supported by the player.
+   */
   AblePlayer.prototype.getSupportedLangs = function () {
     // Returns an array of languages for which AblePlayer has translation tables        
     var langs = ['ab', 'am', 'ar', 'as', 'bh', 'bg', 'ca', 'cs', 'cu', 'da', 'de', 'dv', 'el', 'en', 'es', 'eu', 'fr', 'gl', 'gn', 'gu', 'hr', 'hu', 'it', 'iu', 'ja', 'km', 'kn', 'kv', 'mi', 'nb', 'nl', 'nn', 'no', 'oc', 'oc-aranes', 'pl', 'pt', 'ro', 'ru', 'sk', 'sl', 'sr', 'sv', 'te', 'ti', 'uk', 'yi', 'zh'];
@@ -744,6 +896,13 @@
 
   var originalGetTranslationText = AblePlayer.prototype.getTranslationText;
   if (typeof originalGetTranslationText === 'function') {
+    /**
+     * Forces translation files to be loaded from `/translations/<lang>.json`
+     * regardless of Able Player's configured root path, then restores the
+     * original path after the request finishes.
+     *
+     * @returns {*} Whatever the original `getTranslationText()` implementation returns.
+     */
     AblePlayer.prototype.getTranslationText = function () {
       var thisObj = this;
       var originalRootPath = thisObj.rootPath;
@@ -753,13 +912,19 @@
 
       var result = originalGetTranslationText.apply(thisObj, arguments);
 
+      /**
+       * Restores the player's original root path after translation lookup finishes.
+       *
+       * @returns {void}
+       */
       var restoreRootPath = function () {
         thisObj.rootPath = originalRootPath;
       };
 
       if (result && typeof result.always === 'function') {
         result.always(restoreRootPath);
-      } else {
+      } 
+      else {
         restoreRootPath();
       }
 
@@ -769,6 +934,12 @@
 
   var originalGetSampleDescriptionText = AblePlayer.prototype.getSampleDescriptionText;
   if (typeof originalGetSampleDescriptionText === 'function') {
+    /**
+     * Loads sample description text from the same `/translations` root used for
+     * the rest of the localization files.
+     *
+     * @returns {*} Whatever the original `getSampleDescriptionText()` implementation returns.
+     */
     AblePlayer.prototype.getSampleDescriptionText = function () {
       var thisObj = this;
       var originalRootPath = thisObj.rootPath;
@@ -790,6 +961,15 @@
 (function () {
   var origResizeObject = AblePlayer.prototype.resizeObject;
 
+  /**
+   * Runs Able Player's original resize logic and then adjusts the inner transcript
+   * panel height so the toolbar chrome does not steal usable scrolling space.
+   *
+   * @param {string} which - Resizable window identifier, such as `transcript`.
+   * @param {number} width - Outer width requested for the draggable window.
+   * @param {number} height - Outer height requested for the draggable window.
+   * @returns {void}
+   */
   AblePlayer.prototype.resizeObject = function (which, width, height) {
 
     origResizeObject.apply(this, arguments);
@@ -809,6 +989,13 @@
 (function () {
   var origEndDrag = AblePlayer.prototype.endDrag;
 
+  /**
+   * Finishes the drag operation and immediately recalculates transcript inner
+   * dimensions so the content matches the new window size.
+   *
+   * @param {string} which - Drag target identifier passed by Able Player.
+   * @returns {void}
+   */
   AblePlayer.prototype.endDrag = function (which) {
     origEndDrag.apply(this, arguments);
     if (which === 'transcript' && this.$transcriptArea && this.$transcriptDiv) {
@@ -826,6 +1013,14 @@
 (function () {
   var origStartResize = AblePlayer.prototype.startResize;
 
+  /**
+   * Starts a resize interaction and installs a forced mouseup/touchend cleanup so
+   * the transcript resize handle cannot remain stuck in resizing mode.
+   *
+   * @param {string} which - Resizable window identifier.
+   * @param {jQuery|HTMLElement} $element - Handle or element that initiated the resize.
+   * @returns {*} Original Able Player return value for `startResize()`.
+   */
   AblePlayer.prototype.startResize = function (which, $element) {
     var result = origStartResize.apply(this, arguments);
     var thisObj = this;
@@ -849,6 +1044,14 @@
 
   var originalCreatePopup = AblePlayer.prototype.createPopup;
 
+  /**
+   * Builds the preferences popup while filtering out categories that have no
+   * backing tracks or related UI in the current media instance.
+   *
+   * @param {string} which - Popup identifier requested by Able Player.
+   * @param {Array<Object>|undefined} tracks - Track collection forwarded by Able Player.
+   * @returns {jQuery} Generated popup menu.
+   */
   AblePlayer.prototype.createPopup = function (which, tracks) {
     var thisObj = this;
 
@@ -860,6 +1063,12 @@
     var hasTextTracks = this.mediaElement && this.mediaElement.textTracks && this.mediaElement.textTracks.length > 0;
     var hasMediaElement = this.$media && this.$media.length > 0;
 
+    /**
+     * Checks the native media element for a text track with the requested kind.
+     *
+     * @param {string} kind - Track kind to search for.
+     * @returns {boolean} `true` when a matching text track exists.
+     */
     var hasTracksByKind = function (kind) {
       if (!hasTextTracks) return false;
       for (var t = 0; t < this.mediaElement.textTracks.length; t++) {
@@ -868,10 +1077,22 @@
       return false;
     }.bind(this);
 
+    /**
+     * Checks the media markup for track elements matching a CSS selector.
+     *
+     * @param {string} selector - Selector used to search inside the media element.
+     * @returns {boolean} `true` when matching track markup exists.
+     */
     var hasHtmlTracks = function (selector) {
       return hasMediaElement && this.$media.find(selector).length > 0;
     }.bind(this);
 
+    /**
+     * Determines whether the current YouTube-backed player exposes captions
+     * through any of the sources Able Player can inspect.
+     *
+     * @returns {boolean} `true` when captions appear to be available on YouTube.
+     */
     var hasYouTubeCaptions = function () {
       return this.player === 'youtube' && (
         (this.youtubeCaptions && this.youtubeCaptions.length > 0) ||
@@ -881,6 +1102,11 @@
       );
     }.bind(this);
 
+    /**
+     * Determines whether the current Vimeo-backed player has caption tracks.
+     *
+     * @returns {boolean} `true` when Vimeo captions are available.
+     */
     var hasVimeoCaptions = function () {
       return this.player === 'vimeo' && this.vimeoCaptions && this.vimeoCaptions.length > 0;
     }.bind(this);
@@ -992,11 +1218,25 @@
   const ENGINE_VERSION = 'Able Player v4.7.0';
   const CURRENT_YEAR = new Date().getFullYear();
 
-  // Translation helper
+  /**
+   * Reads a translated string from the current player's translation table and
+   * falls back to the provided default when the key is missing.
+   *
+   * @param {AblePlayer} player - Player instance holding the translation table.
+   * @param {string} key - Translation key to resolve.
+   * @param {string} [fb] - Optional fallback string.
+   * @returns {string} Resolved translation or fallback text.
+   */
   function t(player, key, fb) {
     return (player.tt && player.tt[key]) ? player.tt[key] : (fb || key);
   }
 
+  /**
+   * Creates the custom "About" dialog content and wires it to Able Player's
+   * dialog system the first time it is needed.
+   *
+   * @returns {void}
+   */
   AblePlayer.prototype.buildAboutDialog = function () {
     if (this.aboutDialog) return;
 
@@ -1055,6 +1295,12 @@
     }
   };
 
+  /**
+   * Ensures the custom "About" dialog exists, closes any open popups, and then
+   * opens the dialog for the current player instance.
+   *
+   * @returns {void}
+   */
   AblePlayer.prototype.showAboutDialog = function () {
     this.buildAboutDialog();
     if (typeof this.closePopups === 'function') this.closePopups();
@@ -1062,6 +1308,15 @@
   };
 
   const _origCreatePopup = AblePlayer.prototype.createPopup;
+  
+  /**
+   * Extends the preferences popup with an extra "About" item that opens the
+   * custom dialog introduced by this script.
+   *
+   * @param {string} which - Popup identifier requested by Able Player.
+   * @param {Array<Object>|undefined} tracks - Track collection forwarded by Able Player.
+   * @returns {jQuery} Popup menu returned by the original implementation, possibly extended.
+   */
   AblePlayer.prototype.createPopup = function (which, tracks) {
     const $menu = _origCreatePopup.apply(this, arguments);
     if (which === 'prefs' && $menu && $menu.length) {
@@ -1085,6 +1340,13 @@
 ═════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function () {
+  /**
+   * Returns a larger default width for draggable transcript and sign windows while
+   * still capping the value to the current viewport width on small screens.
+   *
+   * @param {string} which - Draggable window identifier.
+   * @returns {number|undefined} Width in pixels for supported windows.
+   */
   AblePlayer.prototype.getDefaultWidth = function (which) {
     let viewportMaxwidth = window.innerWidth;
     if (which === 'transcript') {
@@ -1109,20 +1371,24 @@
 
   var originalPositionDraggableWindow = AblePlayer.prototype.positionDraggableWindow;
 
+  /**
+   * Runs Able Player's original positioning logic and adds a small top margin when
+   * the sign or transcript window is laid out below the main media element.
+   *
+   * @param {string} which - Draggable window identifier.
+   * @param {number} width - Width being used to position the window.
+   * @returns {void}
+   */
   AblePlayer.prototype.positionDraggableWindow = function (which, width) {
-
     originalPositionDraggableWindow.apply(this, arguments);
 
     if (which === 'sign' && this.$signWindow) {
-
       var position = this.$signWindow.css('position');
 
       if (position === 'relative') {
-
         this.$signWindow.css('margin-top', gap + 'px');
       } 
       else {
-
         this.$signWindow.css('margin-top', '0');
       }
     }
@@ -1138,7 +1404,6 @@
       }
     }
   };
-
 })(jQuery);
 
 /* ════════════════════════════════════════════════════════════════════════════════════════
@@ -1153,14 +1418,24 @@
 (function ($) {
   if (!window.AblePlayer) return;
 
+  /**
+   * Chooses the caption track Able Player should activate by default, preferring
+   * default tracks and caption tracks over subtitles when multiple options exist.
+   *
+   * @param {AblePlayer} player - Player instance whose caption list is inspected.
+   * @returns {Object|null} Preferred caption track or `null` when no captions exist.
+   */
   function getPreferredCaptionTrack(player) {
     if (!player.captions || !player.captions.length) return null;
     var caps = player.captions;
     var byKindAndDef = caps.find(function (c) { return c.def === true && c.kind === 'captions'; });
+    
     if (byKindAndDef) return byKindAndDef;
     var byDef = caps.find(function (c) { return c.def === true; });
+    
     if (byDef) return byDef;
     var byKind = caps.find(function (c) { return c.kind === 'captions'; });
+    
     if (byKind) return byKind;
     return caps[0];
   }
@@ -1170,11 +1445,24 @@
   var _onClick = AblePlayer.prototype.onClickPlayerButton;
   var _origHandleCaptionToggle = AblePlayer.prototype.handleCaptionToggle;
 
+  /**
+   * Extracts the most useful label to represent an audio description track.
+   *
+   * @param {Object} track - Description track metadata.
+   * @returns {string} Visible label, language code, or `AD` fallback.
+   */
   function getDescLabel(track) {
     if (!track) return '';
     return track.label || track.language || 'AD';
   }
 
+  /**
+   * Detects whether the player has any form of open audio description available,
+   * including provider-specific alternate sources.
+   *
+   * @param {AblePlayer} player - Player instance to inspect.
+   * @returns {boolean} `true` when open audio description is available.
+   */
   function hasOpenDescription(player) {
     if (!player) return false;
     if (player.hasOpenDesc) return true;
@@ -1184,6 +1472,13 @@
     return false;
   }
 
+  /**
+   * Synthesizes an audio-description track descriptor from the active captions
+   * language when open description exists but no closed description track is registered.
+   *
+   * @param {AblePlayer} player - Player instance to inspect.
+   * @returns {Object|null} Synthetic descriptions track metadata or `null`.
+   */
   function getOpenDescTrackFromCaptions(player) {
     if (!hasOpenDescription(player)) return null;
     if (player.descriptions && player.descriptions.length) return null; // Closed AD already exists
@@ -1226,6 +1521,15 @@
   if (!window.AblePlayer) return;
   // Keep the original AD track label when Able Player creates descriptions
   var _origSetupDescriptions = AblePlayer.prototype.setupDescriptions;
+  
+  /**
+   * Preserves the original label supplied by the source track after Able Player
+   * creates its internal description-track object.
+   *
+   * @param {Object} track - Original description track metadata.
+   * @param {Array<Object>|undefined} cues - Parsed cue list forwarded to Able Player.
+   * @returns {void}
+   */
   AblePlayer.prototype.setupDescriptions = function (track, cues) {
     _origSetupDescriptions.apply(this, arguments);
     if (this.descriptions && this.descriptions.length) {
@@ -1237,6 +1541,12 @@
   };
 })(jQuery);
 
+  /**
+   * Replaces any existing icon inside the language button with the custom globe SVG.
+   *
+   * @param {jQuery} $button - Button element that should display the language icon.
+   * @returns {void}
+   */
   function setLanguageIcon($button) {
     if (!$button || !$button.length) return;
     $button.find('svg,img').remove();
@@ -1254,6 +1564,13 @@
     $button.append(svg);
   }
 
+  /**
+   * Returns the captions/language popup for the player, creating and appending it
+   * to the controller if it does not exist yet.
+   *
+   * @param {AblePlayer} thisObj - Player instance that owns the popup.
+   * @returns {jQuery} Popup menu element.
+   */
   function ensureLanguagePopup(thisObj) {
     if (thisObj.captionsPopup && thisObj.captionsPopup.length) {
       return thisObj.captionsPopup;
@@ -1268,15 +1585,30 @@
     return $menu;
   }
 
+  /**
+   * Moves roving tabindex focus inside the custom language menu.
+   *
+   * @param {jQuery} $menu - Language popup container.
+   * @param {jQuery} $item - Menu item that should become focusable and focused.
+   * @returns {void}
+   */
   function focusLanguageMenuItem($menu, $item) {
     var selector = 'li[role="menuitemradio"]';
     var $items = $menu.find(selector);
     $items.attr('tabindex', '-1').removeClass('able-focus');
+    
     if ($item && $item.length) {
       $item.attr('tabindex', '0').addClass('able-focus').trigger('focus');
     }
   }
 
+  /**
+   * Rebuilds the language popup contents so it exposes separate groups for
+   * captions and audio description tracks with keyboard-friendly navigation.
+   *
+   * @param {AblePlayer} thisObj - Player instance for which the menu is built.
+   * @returns {jQuery|null} Menu element, or `null` when there is nothing to show.
+   */
   function buildLanguageMenu(thisObj) {
     var showSubs = thisObj.captionsOn && thisObj.captions && thisObj.captions.length;
     var adTracks = (thisObj.descriptions && thisObj.descriptions.length) ? thisObj.descriptions.slice() : [];
@@ -1403,6 +1735,12 @@
     return $menu;
   }
 
+  /**
+   * Reworks the caption controls into two separate buttons: one toggle for turning
+   * captions on/off and one language selector shared with audio descriptions.
+   *
+   * @returns {void}
+   */
   AblePlayer.prototype.addControls = function () {
     _addControls.apply(this, arguments);
 
@@ -1489,6 +1827,14 @@
     var $rightContainer = this.$controllerDiv.find('.able-right-controls');
     if (!$rightContainer.length) $rightContainer = this.$controllerDiv;
     var $pipe = $rightContainer.find('.able-pipe').first();
+    
+    /**
+     * Reorders a right-side controller element so it sits immediately before the
+     * first separator, or appends it when no separator exists.
+     *
+     * @param {jQuery} $el - Control element to move.
+     * @returns {void}
+     */
     var insertBeforePipe = function ($el) {
       if (!$el || !$el.length) return;
       $el.detach();
@@ -1511,6 +1857,13 @@
     this.refreshControls('captions');
   };
 
+  /**
+   * Toggles captions without overloading the language selector button and keeps
+   * YouTube, Vimeo, and HTML5 caption state synchronized with the UI.
+   *
+   * @returns {boolean|void} Returns `false` when suppressing a popup-close click,
+   *   otherwise mirrors Able Player's original behavior.
+   */
   AblePlayer.prototype.handleCaptionToggle = function () {
     var captions = this.captions || [];
 
@@ -1596,6 +1949,12 @@
     this.refreshControls('captions');
   };
 
+  /**
+   * Opens or closes the custom language popup and positions focus on the first
+   * selectable item when the menu becomes visible.
+   *
+   * @returns {void}
+   */
   AblePlayer.prototype.handleCaptionLanguage = function () {
     var thisObj = this;
     var hasSubs = this.captionsOn && this.captions && this.captions.length;
@@ -1634,6 +1993,13 @@
     }
   };
 
+  /**
+   * Routes controller button clicks to the custom caption toggle and language
+   * handlers before delegating all other buttons to Able Player.
+   *
+   * @param {HTMLElement} el - Button element that was activated.
+   * @returns {*} Return value from the delegated handler, when applicable.
+   */
   AblePlayer.prototype.onClickPlayerButton = function (el) {
     var whichButton = this.getButtonNameFromClass($(el).attr('class'));
     if (whichButton === 'captions-toggle') {
@@ -1647,7 +2013,15 @@
     return _onClick.apply(this, arguments);
   };
 
-  // And refresh controls (buttons, status, etc.).
+  /**
+   * Refreshes Able Player controls and then updates the split captions UI so
+   * button visibility, labels, and state stay aligned with captions and AD status.
+   *
+   * @param {string} context - Refresh context supplied by Able Player.
+   * @param {number} duration - Media duration forwarded by Able Player.
+   * @param {number} elapsed - Current playback position forwarded by Able Player.
+   * @returns {void}
+   */
   AblePlayer.prototype.refreshControls = function (context, duration, elapsed) {
     _refresh.apply(this, arguments);
 
@@ -1691,6 +2065,14 @@
       var hasAD = (this.descriptions && this.descriptions.length) || hasOpenDescription(this);
       var showLangButton = (this.captionsOn && hasCaptions) || (this.descOn && hasAD);
       if (showLangButton) {
+        
+        /**
+         * Lowercases only the first character of a translated label so it fits
+         * naturally inside longer aria-label phrases.
+         *
+         * @param {string} str - Source label to normalize.
+         * @returns {string} Label with a lowercased first character when possible.
+         */
         var lowerFirst = function (str) {
           return (str && str.length) ? str.charAt(0).toLowerCase() + str.slice(1) : str;
         };
@@ -1741,6 +2123,12 @@
     }
   };
 
+  /**
+   * Marks the active captions language inside the custom popup menu.
+   *
+   * @param {string} [lang] - Language code that should be marked as selected.
+   * @returns {void}
+   */
   AblePlayer.prototype.updateCaptionsMenu = function (lang) {
     if (!this.captionsPopup) return;
     this.captionsPopup.find('li[data-kind="captions"]').attr('aria-checked', 'false');
@@ -1760,6 +2148,14 @@
 (function ($) {
   if (!window.AblePlayer) return;
 
+  /**
+   * Updates transcript, captions, chapters, descriptions, and metadata selections
+   * without forcing captions and audio descriptions to share the same language.
+   *
+   * @param {string} source - Origin of the language change (`init`, `captions`, or `transcript`).
+   * @param {string} language - Target language code to synchronize.
+   * @returns {void}
+   */
   AblePlayer.prototype.syncTrackLanguages = function (source, language) {
     var i, captions, descriptions, chapters, meta;
 
@@ -1793,7 +2189,6 @@
           this.descriptions[0];
         this.selectedDescriptions = defaultDesc;
       }
-
       this.updateChaptersList();
     } 
     else if (source === 'transcript') {
@@ -1816,6 +2211,12 @@
 (function ($) {
   if (!window.AblePlayer) return;
 
+  /**
+   * Filters browser speech-synthesis voices so audio descriptions prefer voices
+   * matching the selected description language instead of the site language.
+   *
+   * @returns {boolean} Always returns `false`, matching Able Player's original contract.
+   */
   AblePlayer.prototype.getBrowserVoices = function () {
     var voices, descLangs, voiceLang, preferredLang;
 
@@ -1845,6 +2246,13 @@
   };
 
   var _origAnnounceDesc = AblePlayer.prototype.announceDescriptionText;
+  
+  /**
+   * Temporarily switches the player's language to the selected description track
+   * language before delegating the announcement to Able Player.
+   *
+   * @returns {void}
+   */
   AblePlayer.prototype.announceDescriptionText = function () {
     var originalLang = this.lang;
     var descLang = (this.selectedDescriptions && this.selectedDescriptions.language) ||
@@ -1865,6 +2273,12 @@
 
   var origGetYouTubeCaptionTracks = AblePlayer.prototype.getYouTubeCaptionTracks;
 
+  /**
+   * Wraps Able Player's YouTube caption-track lookup in a timeout so the promise
+   * always resolves and the player UI is not blocked when YouTube never responds.
+   *
+   * @returns {jQuery.Promise} Promise resolved with the available YouTube captions.
+   */
   AblePlayer.prototype.getYouTubeCaptionTracks = function () {
     var thisObj = this;
     var originalPromise = origGetYouTubeCaptionTracks.apply(this, arguments);
@@ -1915,6 +2329,13 @@
 ════════════════════════════════════════════════════════════════════════════════════════════════ */
 
 (function patchPlayerRegionAriaLabel() {
+  /**
+   * Builds a localized aria-label for the player region using the media type and
+   * the translated player heading when those strings are available.
+   *
+   * @param {AblePlayer} playerInstance - Player instance whose labels are being built.
+   * @returns {string} Accessible label for the player region container.
+   */
   function getPlayerRegionLabel(playerInstance) {
     var tt = playerInstance.tt || {};
     var mediaType = (playerInstance.mediaType || 'media').toString().toLowerCase();
@@ -1927,16 +2348,30 @@
     return playerHeading || mediaLabel || 'player';
   }
 
+  /**
+   * Installs an override that adds an explicit aria-label to the player region
+   * after Able Player injects its control area.
+   *
+   * @returns {boolean} `true` when the patch is active, `false` when prerequisites
+   *   are not available yet.
+   */
   function applyPatch() {
     if (!window.AblePlayer || !AblePlayer.prototype || !AblePlayer.prototype.injectPlayerControlArea) {
       return false;
     }
+    
     if (AblePlayer.prototype.__twPlayerRegionAriaLabelPatched) {
       return true;
     }
 
     var originalInjectPlayerControlArea = AblePlayer.prototype.injectPlayerControlArea;
 
+    /**
+     * Injects Able Player's control area and then labels the outer player region
+     * so screen readers can identify audio and video players consistently.
+     *
+     * @returns {void}
+     */
     AblePlayer.prototype.injectPlayerControlArea = function () {
       originalInjectPlayerControlArea.apply(this, arguments);
 
@@ -1951,6 +2386,12 @@
 
   if (applyPatch()) return;
 
+  /**
+   * Retries the region-label patch once window load guarantees Able Player's
+   * control-area injector is available.
+   *
+   * @returns {void}
+   */
   var onReady = function () { applyPatch(); };
   if (document.readyState === 'complete') onReady();
   else window.addEventListener('load', onReady);
