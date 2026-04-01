@@ -228,18 +228,59 @@ Welcome to the video.
 
 ## Language coverage
 
-Current TOTHOM custom layer is fully validated for:
-- Catalan (`ca`)
-- Aranese (`oc-aranes`)
-- Spanish (`es`)
-- English (`en`)
+The custom layer currently supports the same language set declared in `custom-ableplayer/custom-player.js` and shipped as JSON files in `/translations`.
+
+Supported language codes:
+- `ab` Abkhazian
+- `am` Amharic
+- `ar` Arabic
+- `as` Assamese
+- `bh` Bihari
+- `bg` Bulgarian
+- `ca` Catalan
+- `cs` Czech
+- `cu` Church Slavic
+- `da` Danish
+- `de` German
+- `dv` Divehi
+- `el` Greek
+- `en` English
+- `es` Spanish
+- `eu` Basque
+- `fr` French
+- `gl` Galician
+- `gn` Guarani
+- `gu` Gujarati
+- `hr` Croatian
+- `hu` Hungarian
+- `it` Italian
+- `iu` Inuktitut
+- `ja` Japanese
+- `km` Khmer
+- `kn` Kannada
+- `kv` Komi
+- `mi` Maori
+- `nb` Norwegian Bokmal
+- `nl` Dutch
+- `nn` Norwegian Nynorsk
+- `no` Norwegian
+- `oc` Occitan
+- `oc-aranes` Aranese
+- `pl` Polish
+- `pt` Portuguese
+- `ro` Romanian
+- `ru` Russian
+- `sk` Slovak
+- `sl` Slovenian
+- `sr` Serbian
+- `sv` Swedish
+- `te` Telugu
+- `ti` Tigrinya
+- `uk` Ukrainian
+- `yi` Yiddish
+- `zh` Chinese
 
 ## License
 
 - Able Player core files: MIT (see `ableplayer/LICENSE`)
 - TOTHOM custom layer: proprietary (see `custom-ableplayer/LICENSE`)
-
-## Source reference
-
-This README is adapted from the standalone implementation guide:
-- https://ableplayer.tothom.dev/pages/implementacio-hc.html
