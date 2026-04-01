@@ -893,6 +893,7 @@
 ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 (function ($) {
   if (!window.AblePlayer || !AblePlayer.prototype) return;
+  var CUSTOM_TRANSLATIONS_ROOT_PATH = '/libraries/tothom-ableplayer-drupal/';
 
   var originalGetTranslationText = AblePlayer.prototype.getTranslationText;
   if (typeof originalGetTranslationText === 'function') {
@@ -908,7 +909,7 @@
       var originalRootPath = thisObj.rootPath;
 
       // Force translation lookup to /translations/<lang>.json
-      thisObj.rootPath = '/';
+      thisObj.rootPath = CUSTOM_TRANSLATIONS_ROOT_PATH;
 
       var result = originalGetTranslationText.apply(thisObj, arguments);
 
@@ -945,7 +946,7 @@
       var originalRootPath = thisObj.rootPath;
 
       // Keep sample description translations aligned with /translations
-      thisObj.rootPath = '/';
+      thisObj.rootPath = CUSTOM_TRANSLATIONS_ROOT_PATH;
 
       var result = originalGetSampleDescriptionText.apply(thisObj, arguments);
       thisObj.rootPath = originalRootPath;
