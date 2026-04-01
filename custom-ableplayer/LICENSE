@@ -1,0 +1,53 @@
+TOTHOM Proprietary License
+Version 1.0
+
+Copyright (c) 2026 TOTHOM. All rights reserved.
+
+This license applies ONLY to the files under the `custom-ableplayer/` directory
+(the "Custom Layer").
+
+The files under `ableplayer/` are NOT covered by this license and remain subject
+to their own MIT license terms.
+
+1. Grant of rights
+
+Subject to the terms of this license, TOTHOM grants you a limited,
+non-exclusive, non-transferable, revocable right to use the Custom Layer in
+projects owned or operated by you or your organization.
+
+2. Restrictions
+
+Unless you have prior written permission from TOTHOM, you may NOT:
+- redistribute, sublicense, sell, lease, or otherwise commercialize the Custom Layer;
+- publish the source code of the Custom Layer as open source;
+- remove or alter copyright, attribution, or license notices;
+- create or distribute derivative works of the Custom Layer as a standalone product.
+
+3. Internal modifications
+
+You may modify the Custom Layer for internal use in your own deployments.
+Any such modifications remain subject to this license and do not grant you
+ownership of the original Custom Layer.
+
+4. No warranty
+
+THE CUSTOM LAYER IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+
+5. Limitation of liability
+
+IN NO EVENT SHALL TOTHOM BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM,
+OUT OF, OR IN CONNECTION WITH THE CUSTOM LAYER OR THE USE OR OTHER DEALINGS IN
+THE CUSTOM LAYER.
+
+6. Termination
+
+This license terminates automatically if you fail to comply with its terms.
+Upon termination, you must stop using and distributing the Custom Layer.
+
+7. Contact
+
+For commercial licensing, redistribution rights, or custom terms, contact:
+desenvolupament@tothomweb.com

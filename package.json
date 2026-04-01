@@ -1,0 +1,31 @@
+{
+  "name": "tothom-ableplayer-drupal",
+  "version": "1.0.0",
+  "description": "TOTHOM Able Player for Drupal with accessibility improvements, UI refinements, and extended language support.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/donbuche/TOTHOM-AblePlayer-Drupal.git"
+  },
+  "homepage": "https://github.com/donbuche/TOTHOM-AblePlayer-Drupal#readme",
+  "bugs": {
+    "url": "https://github.com/donbuche/TOTHOM-AblePlayer-Drupal/issues"
+  },
+  "keywords": [
+    "ableplayer",
+    "accessible-media-player",
+    "captions",
+    "audio-description",
+    "transcript",
+    "wcag",
+    "tothom"
+  ],
+  "author": "Aleix Martín <aleix.martin@tothomweb.com>",
+  "contributors": [
+    "Joan Galtés i Moreno <joan.galtes@tothomweb.com>"
+  ],
+  "peerDependencies": {
+    "jquery": ">=3.7.1",
+    "js-cookie": ">=3.0.1"
+  },
+  "license": "MIT AND LicenseRef-TOTHOMweb-Proprietary"
+}
