@@ -889,70 +889,181 @@
 // })(jQuery);
 
 /* ═══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════
-   FORCE TRANSLATION FILES TO LOAD FROM /TRANSLATIONS
+   LOAD TRANSLATIONS FROM PUBLIC FILES FIRST, THEN FALL BACK TO THE PACKAGE COPY
 ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 (function ($) {
   if (!window.AblePlayer || !AblePlayer.prototype) return;
-  var CUSTOM_TRANSLATIONS_ROOT_PATH = '/libraries/tothom-ableplayer-drupal/';
+  var PUBLIC_FILES_TRANSLATIONS_ROOT_PATH = '/sites/default/files/able-player/';
+  var PACKAGE_TRANSLATIONS_ROOT_PATH = '/libraries/tothom-ableplayer-drupal/';
 
-  var originalGetTranslationText = AblePlayer.prototype.getTranslationText;
-  if (typeof originalGetTranslationText === 'function') {
-    /**
-     * Forces translation files to be loaded from `/translations/<lang>.json`
-     * regardless of Able Player's configured root path, then restores the
-     * original path after the request finishes.
-     *
-     * @returns {*} Whatever the original `getTranslationText()` implementation returns.
-     */
-    AblePlayer.prototype.getTranslationText = function () {
-      var thisObj = this;
-      var originalRootPath = thisObj.rootPath;
+  /**
+   * Builds a translation asset URL from an Able Player root path and a language code.
+   * The root path must not include the trailing `translations/` segment because
+   * Able Player appends it when resolving translation files.
+   *
+   * @param {string} rootPath - Base Able Player root path.
+   * @param {string} lang - Language code to load.
+   * @param {string} extension - File extension to request, without the dot.
+   * @returns {string} Fully resolved translation file URL.
+   */
+  function buildTranslationUrl(rootPath, lang, extension) {
+    return rootPath + 'translations/' + lang + '.' + extension;
+  }
 
-      // Force translation lookup to /translations/<lang>.json
-      thisObj.rootPath = CUSTOM_TRANSLATIONS_ROOT_PATH;
+  /**
+   * Normalizes the player's current language exactly as Able Player does before
+   * attempting to load its translation file.
+   *
+   * @param {AblePlayer} player - Player instance whose language must be resolved.
+   * @returns {void}
+   */
+  function resolveTranslationLanguage(player) {
+    var supportedLangs;
+    var bodyLang;
+    var languageFound;
+    var i;
 
-      var result = originalGetTranslationText.apply(thisObj, arguments);
-
-      /**
-       * Restores the player's original root path after translation lookup finishes.
-       *
-       * @returns {void}
-       */
-      var restoreRootPath = function () {
-        thisObj.rootPath = originalRootPath;
-      };
-
-      if (result && typeof result.always === 'function') {
-        result.always(restoreRootPath);
+    supportedLangs = player.getSupportedLangs();
+    if (player.lang && $.inArray(player.lang, supportedLangs) === -1) {
+      if (player.lang.indexOf('-') === 2) {
+        player.lang = $.inArray(player.lang.substring(0, 2), supportedLangs) !== -1
+          ? player.lang.substring(0, 2)
+          : null;
       } 
       else {
-        restoreRootPath();
+        languageFound = false;
+        for (i = 0; i < supportedLangs.length; i++) {
+          if (supportedLangs[i].substring(0, 2) === player.lang) {
+            player.lang = supportedLangs[i];
+            languageFound = true;
+            break;
+          }
+        }
+        if (!languageFound) {
+          player.lang = null;
+        }
       }
+    }
 
-      return result;
-    };
+    if (!player.lang) {
+      bodyLang = $('body').attr('lang')
+        ? $('body').attr('lang').toLowerCase()
+        : $('html').attr('lang')
+          ? $('html').attr('lang').toLowerCase()
+          : null;
+
+      if (bodyLang) {
+        if ($.inArray(bodyLang, supportedLangs) !== -1) {
+          player.lang = bodyLang;
+        } 
+        else if (bodyLang.indexOf('-') === 2 && $.inArray(bodyLang.substring(0, 2), supportedLangs) !== -1) {
+          player.lang = bodyLang.substring(0, 2);
+        }
+      }
+    }
+
+    if (!player.lang) {
+      player.lang = 'en';
+    }
+
+    if (!player.searchLang) {
+      player.searchLang = player.lang;
+    }
   }
 
-  var originalGetSampleDescriptionText = AblePlayer.prototype.getSampleDescriptionText;
-  if (typeof originalGetSampleDescriptionText === 'function') {
-    /**
-     * Loads sample description text from the same `/translations` root used for
-     * the rest of the localization files.
-     *
-     * @returns {*} Whatever the original `getSampleDescriptionText()` implementation returns.
-     */
-    AblePlayer.prototype.getSampleDescriptionText = function () {
-      var thisObj = this;
-      var originalRootPath = thisObj.rootPath;
+  /**
+   * Requests a translation JSON from the public files directory first and falls
+   * back to the package copy when the public file is missing.
+   *
+   * @param {string} lang - Language code to load.
+   * @param {Function} onSuccess - Callback executed with the parsed JSON payload.
+   * @param {Function} onFailure - Callback executed when both locations fail.
+   * @returns {void}
+   */
+  function getTranslationJson(lang, onSuccess, onFailure) {
+    var publicUrl = buildTranslationUrl(PUBLIC_FILES_TRANSLATIONS_ROOT_PATH, lang, 'json');
+    var packageUrl = buildTranslationUrl(PACKAGE_TRANSLATIONS_ROOT_PATH, lang, 'json');
 
-      // Keep sample description translations aligned with /translations
-      thisObj.rootPath = CUSTOM_TRANSLATIONS_ROOT_PATH;
-
-      var result = originalGetSampleDescriptionText.apply(thisObj, arguments);
-      thisObj.rootPath = originalRootPath;
-      return result;
-    };
+    $.getJSON(publicUrl, onSuccess).fail(function () {
+      $.getJSON(packageUrl, onSuccess).fail(onFailure);
+    });
   }
+
+  /**
+   * Loads the legacy JavaScript translation file from the package copy as a final
+   * compatibility fallback if no JSON translation could be loaded.
+   *
+   * @param {AblePlayer} player - Player instance that receives the translation table.
+   * @param {string} lang - Language code to load.
+   * @param {Function} onSuccess - Callback executed after a successful load.
+   * @param {Function} onFailure - Callback executed if the legacy file also fails.
+   * @returns {void}
+   */
+  function getPackageLegacyTranslation(player, lang, onSuccess, onFailure) {
+    var legacyUrl = buildTranslationUrl(PACKAGE_TRANSLATIONS_ROOT_PATH, lang, 'js');
+
+    $.getJSON(legacyUrl, function (data) {
+      player.tt = data;
+      onSuccess();
+    }).fail(onFailure);
+  }
+
+  /**
+   * Loads the player translation table by checking Drupal public files first and
+   * falling back to the packaged translation copy when needed.
+   *
+   * Final URLs built by this override are:
+   * - `/sites/default/files/able-player/translations/<lang>.json`
+   * - `/libraries/tothom-ableplayer-drupal/translations/<lang>.json`
+   *
+   * @returns {jQuery.Promise} Promise resolved when a translation table is loaded.
+   */
+  AblePlayer.prototype.getTranslationText = function () {
+    var deferred = $.Deferred();
+    var thisObj = this;
+
+    resolveTranslationLanguage(thisObj);
+
+    getTranslationJson(thisObj.lang, function (data) {
+      thisObj.tt = data;
+      deferred.resolve();
+    }, function () {
+      getPackageLegacyTranslation(thisObj, thisObj.lang, function () {
+        deferred.resolve();
+      }, function () {
+        thisObj.provideFallback();
+        deferred.fail();
+      });
+    });
+
+    return deferred.promise();
+  };
+
+  /**
+   * Loads sample description texts from the public files directory first and uses
+   * the packaged translation files as a per-language fallback.
+   *
+   * @returns {void}
+   */
+  AblePlayer.prototype.getSampleDescriptionText = function () {
+    var thisObj = this;
+    var supportedLangs = this.getSupportedLangs();
+
+    this.sampleText = [];
+
+    supportedLangs.forEach(function (lang) {
+      getTranslationJson(lang, function (data) {
+        if (typeof data.sampleDescriptionText !== 'undefined') {
+          thisObj.sampleText.push({
+            lang: lang,
+            text: data.sampleDescriptionText
+          });
+        }
+      }, function () {
+        // Ignore missing sample description files after both lookup locations fail.
+      });
+    });
+  };
 })(jQuery);
 
 /* ════════════════════════════════════════════════════════════════════════════════════════

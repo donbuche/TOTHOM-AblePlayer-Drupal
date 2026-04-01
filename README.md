@@ -17,6 +17,14 @@ This package provides:
 npm install tothom-ableplayer-drupal
 ```
 
+This package is designed to be installed with npm and then copied or mirrored from `node_modules/tothom-ableplayer-drupal` into a Drupal site's `web/libraries/tothom-ableplayer-drupal` directory.
+
+The custom translation lookup implemented in `custom-ableplayer/custom-player.js` assumes a Drupal deployment with these public URLs:
+- `/sites/default/files/able-player/translations/<lang>.json`
+- `/libraries/tothom-ableplayer-drupal/translations/<lang>.json`
+
+Because of that, using the package directly from `node_modules` is not a supported final deployment layout for Drupal. If the package is not available under `/web/libraries/tothom-ableplayer-drupal`, the built-in translation paths will not resolve correctly.
+
 ## Required dependencies
 
 Include these dependencies in your page/app:
@@ -47,6 +55,8 @@ custom-ableplayer/
 ## Basic standalone integration
 This is an example for a standalone integration using CDN files for dependencies.
 
+Important: this only shows how to load the JS and CSS files in isolation. The custom translation routing in this package is Drupal-oriented and expects the final deployed URLs described above. If you serve the package directly from `node_modules`, the translation lookup paths will not match this README's supported setup.
+
 ```html
 <head>
   <!-- Dependencies -->
@@ -65,7 +75,9 @@ This is an example for a standalone integration using CDN files for dependencies
 
 ## Drupal integration
 
-For Drupal projects, copy the package contents into `/web/libraries` and do the same for dependencies (`jquery` and `js-cookie`), so all required assets are available under `/web/libraries`.
+For Drupal projects, copy the package contents from `node_modules/tothom-ableplayer-drupal` into `/web/libraries/tothom-ableplayer-drupal` and do the same for dependencies (`jquery` and `js-cookie`), so all required assets are available under `/web/libraries`.
+
+This is the supported deployment model for this package. The custom translation loader relies on the library being publicly reachable from `/libraries/tothom-ableplayer-drupal/`.
 
 Then create a library in `YOUR_THEME.libraries.yml` that references those files from `/web/libraries`.
 
@@ -90,6 +102,21 @@ Attach the library in Twig (for example, in a template where the player is rende
 ```twig
 {{ attach_library('YOUR_THEME/ableplayer_tothom') }}
 ```
+
+### Translation paths
+
+The custom layer overrides Able Player's default translation lookup.
+
+When the player needs `es.json`, `ca.json`, `oc-aranes.json`, or any other translation file, it will try these URLs in this order:
+
+1. `/sites/default/files/able-player/translations/<lang>.json`
+2. `/libraries/tothom-ableplayer-drupal/translations/<lang>.json`
+
+This means:
+
+- Custom or overridden translation files should be placed in `web/sites/default/files/able-player/translations/`.
+- The packaged fallback translations must remain available in `web/libraries/tothom-ableplayer-drupal/translations/`.
+- If the package is served from any location other than `/web/libraries/tothom-ableplayer-drupal`, these built-in paths will not work unless you modify the constants in `custom-ableplayer/custom-player.js`.
 
 ### Base player markup
 
