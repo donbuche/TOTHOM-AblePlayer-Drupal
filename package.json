@@ -1,6 +1,6 @@
 {
   "name": "tothom-ableplayer-drupal",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "TOTHOM Able Player for Drupal with accessibility improvements, UI refinements, and extended language support.",
   "repository": {
     "type": "git",
