@@ -4,12 +4,11 @@ Accessible HTML5 media player package based on Able Player, customized by TOTHOM
 
 This package provides:
 - Able Player core build files
-- TOTHOM custom JS/CSS layer
-- Translation files (including `oc-aranes`)
+- TOTHOM's custom JS/CSS layer
+- Translation files
 
 ## Version
-- TOTHOM Edition: `v1.1.2`
-- Able Player base used for customization: `v4.7.0`
+- The base of this package is a fork from the Able Player version: `4.7.0`
 
 ## Installation
 
@@ -28,7 +27,7 @@ Because of that, using the package directly from `node_modules` is not a support
 ## Required dependencies
 
 Include these dependencies in your page/app:
-- jQuery `3.7.1` (**Important!** Only if it is not already provided by Drupal core)
+- jQuery `3.7.1` (**Important!** Only needed if it is not already provided by your Drupal core)
 - js-cookie `3.0.1`
 
 ```bash
@@ -52,6 +51,10 @@ ableplayer/
 custom-ableplayer/
   custom-player.js
   custom-player.css
+translations/
+  ca.json
+  es.json
+  ...
 ```
 
 ## Basic standalone integration
@@ -298,3 +301,7 @@ This is the list of supported languages:
 
 - Author (standalone and Wordpress version): [Aleix Martín](https://github.com/amartincua)
 - Contributor (Drupal version): [Joan Galtés i Moreno](https://github.com/joan-galtes)
+
+## Accessibility services
+
+If accessibility is an important part of your project, visit the TOTHOM's site at [TOTHOMweb.com](https://www.tothomweb.com/en) to learn more about our work in inclusive design, accessible development, and digital accessibility services. If you would like to get in touch or request a quote, feel free to contact us here: [tothomweb.com/en/contact](https://tothomweb.com/en/contact).
