@@ -893,8 +893,16 @@
 ════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════ */
 (function ($) {
   if (!window.AblePlayer || !AblePlayer.prototype) return;
-  var PUBLIC_FILES_TRANSLATIONS_ROOT_PATH = '/sites/default/files/able-player/';
-  var PACKAGE_TRANSLATIONS_ROOT_PATH = '/libraries/tothom-ableplayer-drupal/';
+  
+  // @see drupier_preprocess_html()
+  // @see drupier_check_custom_ableplayer_translations()
+  var ablePlayerSettings = (window.drupalSettings && window.drupalSettings.drupierAblePlayer) ? window.drupalSettings.drupierAblePlayer : {};
+  var PUBLIC_FILES_TRANSLATIONS_ROOT_PATH = ablePlayerSettings.publicTranslationsBase || '/sites/default/files/able-player/';
+  var PACKAGE_TRANSLATIONS_ROOT_PATH = ablePlayerSettings.packageTranslationsBase || '/libraries/tothom-ableplayer-drupal/';
+  var publicTranslationsEnabled = (typeof ablePlayerSettings.publicTranslationsAvailable === 'boolean')
+    ? ablePlayerSettings.publicTranslationsAvailable
+    : true;
+  var publicTranslationsAvailability = null;
 
   /**
    * Builds a translation asset URL from an Able Player root path and a language code.
@@ -984,7 +992,15 @@
     var publicUrl = buildTranslationUrl(PUBLIC_FILES_TRANSLATIONS_ROOT_PATH, lang, 'json');
     var packageUrl = buildTranslationUrl(PACKAGE_TRANSLATIONS_ROOT_PATH, lang, 'json');
 
-    $.getJSON(publicUrl, onSuccess).fail(function () {
+    if (!publicTranslationsEnabled || publicTranslationsAvailability === false) {
+      $.getJSON(packageUrl, onSuccess).fail(onFailure);
+      return;
+    }
+
+    $.getJSON(publicUrl, onSuccess).done(function () {
+      publicTranslationsAvailability = true;
+    }).fail(function () {
+      publicTranslationsAvailability = false;
       $.getJSON(packageUrl, onSuccess).fail(onFailure);
     });
   }
